@@ -1,4 +1,4 @@
--- NEVERLOOSE UI Library - Ultimate Redesign Edition
+-- NEVERLOOSE UI Library - Fixed Edition
 -- Roblox Luau UI Library
 
 local cloneref = (cloneref or function(obj) return obj end)
@@ -13,7 +13,6 @@ local Players = cloneref(game:GetService("Players"))
 local VoltClips = {}
 VoltClips.__index = VoltClips
 
--- Helper: Anti-Detection Random Name Generator
 local function RandomName(length)
     length = length or math.random(10, 18)
     local str = ""
@@ -23,7 +22,6 @@ local function RandomName(length)
     return str
 end
 
--- Secure Parent Finder
 local function GetSecureParent()
     local hui = gethui()
     if hui then
@@ -46,7 +44,6 @@ local function Tween(object, info, properties)
     return tween
 end
 
--- Helper: Add Smooth UIGradient
 local function AddGradient(instance, color1, color2, rotation)
     local grad = Instance.new("UIGradient")
     grad.Color = ColorSequence.new(color1, color2)
@@ -55,13 +52,11 @@ local function AddGradient(instance, color1, color2, rotation)
     return grad
 end
 
--- Create Window
 function VoltClips:CreateWindow(options)
     options = options or {}
     local windowTitle = options.Title or "NEVERLOOSE"
     local gearIconId = "rbxassetid://11347197194"
 
-    -- ScreenGui Setup (Protected)
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = RandomName()
     ScreenGui.ResetOnSpawn = false
@@ -70,7 +65,6 @@ function VoltClips:CreateWindow(options)
     protectgui(ScreenGui)
     ScreenGui.Parent = GetSecureParent()
 
-    -- Color Palette (Smooth Neverlose Theme)
     local Theme = {
         MainBgTop = Color3.fromRGB(15, 20, 31),
         MainBgBottom = Color3.fromRGB(10, 13, 20),
@@ -90,7 +84,6 @@ function VoltClips:CreateWindow(options)
         ModalBg = Color3.fromRGB(14, 19, 30)
     }
 
-    -- Main Container Frame
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = RandomName()
     MainFrame.Size = UDim2.new(0, 740, 0, 500)
@@ -118,14 +111,12 @@ function VoltClips:CreateWindow(options)
     GlowStroke.Thickness = 1
     GlowStroke.Parent = MainFrame
 
-    -- Dragging System
     local dragging, dragInput, dragStart, startPos
     local function update(input)
         local delta = input.Position - dragStart
         MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 
-    -- Top Header
     local Header = Instance.new("Frame")
     Header.Name = RandomName()
     Header.Size = UDim2.new(1, 0, 0, 46)
@@ -173,7 +164,6 @@ function VoltClips:CreateWindow(options)
         end
     end)
 
-    -- Header Title & "NL" Logo Badge
     local HeaderTitleContainer = Instance.new("Frame")
     HeaderTitleContainer.Name = RandomName()
     HeaderTitleContainer.Size = UDim2.new(1, -20, 1, 0)
@@ -226,7 +216,6 @@ function VoltClips:CreateWindow(options)
     TitleLabel.LayoutOrder = 2
     TitleLabel.Parent = HeaderTitleContainer
 
-    -- Notification Holder
     local NotificationHolder = Instance.new("Frame")
     NotificationHolder.Name = RandomName()
     NotificationHolder.Size = UDim2.new(0, 280, 1, -20)
@@ -241,7 +230,6 @@ function VoltClips:CreateWindow(options)
     NotifLayout.SortOrder = Enum.SortOrder.LayoutOrder
     NotifLayout.Parent = NotificationHolder
 
-    -- Sidebar
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomName()
     Sidebar.Size = UDim2.new(0, 160, 1, -46)
@@ -277,7 +265,6 @@ function VoltClips:CreateWindow(options)
     TabListLayout.Padding = UDim.new(0, 5)
     TabListLayout.Parent = TabHolder
 
-    -- Content Area
     local ContentArea = Instance.new("Frame")
     ContentArea.Name = RandomName()
     ContentArea.Size = UDim2.new(1, -160, 1, -46)
@@ -285,7 +272,6 @@ function VoltClips:CreateWindow(options)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
-    -- Modal Overlay & Dynamic Settings Popup (No clipping, Auto-Resizing!)
     local ModalOverlay = Instance.new("TextButton")
     ModalOverlay.Name = RandomName()
     ModalOverlay.Size = UDim2.new(1, 0, 1, 0)
@@ -300,7 +286,7 @@ function VoltClips:CreateWindow(options)
 
     local ModalFrame = Instance.new("Frame")
     ModalFrame.Name = RandomName()
-    ModalFrame.Size = UDim2.new(0, 360, 0, 0) -- Auto Size Y!
+    ModalFrame.Size = UDim2.new(0, 360, 0, 0)
     ModalFrame.Position = UDim2.new(0.5, -180, 0.4, 0)
     ModalFrame.BackgroundColor3 = Theme.ModalBg
     ModalFrame.BorderSizePixel = 0
@@ -318,7 +304,6 @@ function VoltClips:CreateWindow(options)
     ModalStroke.Thickness = 1.2
     ModalStroke.Parent = ModalFrame
 
-    -- Draggable Modal Header
     local ModalHeader = Instance.new("Frame")
     ModalHeader.Name = RandomName()
     ModalHeader.Size = UDim2.new(1, 0, 0, 38)
@@ -386,7 +371,6 @@ function VoltClips:CreateWindow(options)
     ModalTitle.ZIndex = 103
     ModalTitle.Parent = ModalHeader
 
-    -- Fixed Close Button (Clean ASCII "X", NO MORE Missing Glyph Square!)
     local ModalCloseBtn = Instance.new("TextButton")
     ModalCloseBtn.Name = RandomName()
     ModalCloseBtn.Size = UDim2.new(0, 22, 0, 22)
@@ -429,7 +413,6 @@ function VoltClips:CreateWindow(options)
     ModalLayout.Padding = UDim.new(0, 8)
     ModalLayout.Parent = ModalContent
 
-    -- Dynamic Height Recalculation for Modal
     ModalLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
         ModalContent.Size = UDim2.new(1, -20, 0, ModalLayout.AbsoluteContentSize.Y)
         ModalFrame.Size = UDim2.new(0, 360, 0, ModalLayout.AbsoluteContentSize.Y + 54)
@@ -461,7 +444,6 @@ function VoltClips:CreateWindow(options)
         GearIconId = gearIconId
     }
 
-    -- Notification System
     function WindowObj:Notify(notifOpts)
         notifOpts = notifOpts or {}
         local title = notifOpts.Title or "Notification"
@@ -556,7 +538,6 @@ function VoltClips:CreateWindow(options)
         end
     end
 
-    -- Internal Slider Helper
     function WindowObj:InternalCreateSlider(parent, opts, customZIndex)
         opts = opts or {}
         local sliderName = opts.Name or "Slider"
@@ -730,7 +711,6 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- Internal Toggle Helper
     function WindowObj:InternalCreateToggle(parent, opts, customZIndex)
         opts = opts or {}
         local toggleName = opts.Name or "Toggle"
@@ -851,7 +831,6 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- NEW ELEMENT: Internal Dropdown Helper
     function WindowObj:InternalCreateDropdown(parent, opts, customZIndex)
         opts = opts or {}
         local dropName = opts.Name or "Dropdown"
@@ -915,9 +894,10 @@ function VoltClips:CreateWindow(options)
         Arrow.Size = UDim2.new(0, 20, 1, 0)
         Arrow.Position = UDim2.new(1, -20, 0, 0)
         Arrow.BackgroundTransparency = 1
-        Arrow.Text = "▼"
+        Arrow.Text = "v"
         Arrow.TextColor3 = Theme.TextMuted
         Arrow.TextSize = 9
+        Arrow.Font = Enum.Font.GothamBold
         Arrow.ZIndex = zIdx + 2
         Arrow.Parent = SelectedBox
 
@@ -955,11 +935,11 @@ function VoltClips:CreateWindow(options)
                 local targetHeight = math.min(#optionsList * 22, 110)
                 Tween(OptionContainer, TweenInfo.new(0.15), {Size = UDim2.new(1, -20, 0, targetHeight)})
                 Tween(DropdownFrame, TweenInfo.new(0.15), {Size = UDim2.new(1, 0, 0, 54 + targetHeight)})
-                Arrow.Text = "▲"
+                Arrow.Text = "^"
             else
                 local tweenClose = Tween(OptionContainer, TweenInfo.new(0.12), {Size = UDim2.new(1, -20, 0, 0)})
                 Tween(DropdownFrame, TweenInfo.new(0.12), {Size = UDim2.new(1, 0, 0, 52)})
-                Arrow.Text = "▼"
+                Arrow.Text = "v"
                 tweenClose.Completed:Connect(function()
                     if not isOpen then OptionContainer.Visible = false end
                 end)
@@ -1009,7 +989,6 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- NEW ELEMENT: Internal TextBox Helper
     function WindowObj:InternalCreateTextBox(parent, opts, customZIndex)
         opts = opts or {}
         local textName = opts.Name or "Input"
@@ -1081,7 +1060,6 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- Create Tab Method (2-COLUMN GRID SUPPORT!)
     function WindowObj:CreateTab(tabName, iconId)
         tabName = tabName or "Tab"
 
@@ -1137,7 +1115,6 @@ function VoltClips:CreateWindow(options)
         TabLabel.TextXAlignment = Enum.TextXAlignment.Left
         TabLabel.Parent = TabBtn
 
-        -- Main Page Grid Frame (Holds Left & Right Columns)
         local PageFrame = Instance.new("ScrollingFrame")
         PageFrame.Name = RandomName()
         PageFrame.Size = UDim2.new(1, -20, 1, -20)
@@ -1149,11 +1126,11 @@ function VoltClips:CreateWindow(options)
         PageFrame.Visible = false
         PageFrame.Parent = ContentArea
 
-        -- Left Column
         local LeftColumn = Instance.new("Frame")
         LeftColumn.Name = RandomName()
-        LeftColumn.Size = UDim2.new(0.5, -6, 1, 0)
+        LeftColumn.Size = UDim2.new(0.5, -6, 0, 0)
         LeftColumn.Position = UDim2.new(0, 0, 0, 0)
+        LeftColumn.AutomaticSize = Enum.AutomaticSize.Y
         LeftColumn.BackgroundTransparency = 1
         LeftColumn.Parent = PageFrame
 
@@ -1162,21 +1139,19 @@ function VoltClips:CreateWindow(options)
         LeftLayout.Padding = UDim.new(0, 10)
         LeftLayout.Parent = LeftColumn
 
-        -- Right Column
         local RightColumn = Instance.new("Frame")
         RightColumn.Name = RandomName()
-        RightColumn.Size = UDim2.new(0.5, -6, 1, 0)
+        RightColumn.Size = UDim2.new(0.5, -6, 0, 0)
         RightColumn.Position = UDim2.new(0.5, 6, 0, 0)
+        RightColumn.AutomaticSize = Enum.AutomaticSize.Y
         RightColumn.BackgroundTransparency = 1
-        RightColumn.Parent = RightColumn
+        RightColumn.Parent = PageFrame -- Исправлена критическая ошибка привязки!
 
         local RightLayout = Instance.new("UIListLayout")
         RightLayout.SortOrder = Enum.SortOrder.LayoutOrder
         RightLayout.Padding = UDim.new(0, 10)
         RightLayout.Parent = RightColumn
-        RightColumn.Parent = PageFrame
 
-        -- Auto-calculate CanvasSize based on taller column
         local function UpdateCanvas()
             local leftHeight = LeftLayout.AbsoluteContentSize.Y
             local rightHeight = RightLayout.AbsoluteContentSize.Y
@@ -1220,12 +1195,11 @@ function VoltClips:CreateWindow(options)
 
         table.insert(WindowObj.Tabs, TabObj)
 
-        -- Create Section with Column Selection ("Left" or "Right")
         function TabObj:CreateSection(sectionName, side)
             sectionName = sectionName or "Section"
-            side = side or "Left"
+            side = tostring(side or "Left"):lower()
 
-            local parentCol = (side:lower() == "right") and RightColumn or LeftColumn
+            local parentCol = (side == "right") and RightColumn or LeftColumn
 
             local SectionFrame = Instance.new("Frame")
             SectionFrame.Name = RandomName()
