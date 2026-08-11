@@ -1,4 +1,4 @@
--- VoltClips UI Library (Neverlose Style) - Redesigned & Enhanced Edition
+-- NEVERLOOSE UI Library - Modern & Undetectable Edition
 -- Roblox Luau UI Library
 
 local cloneref = (cloneref or function(obj) return obj end)
@@ -13,7 +13,7 @@ local Players = cloneref(game:GetService("Players"))
 local VoltClips = {}
 VoltClips.__index = VoltClips
 
--- Helper: Anti-Detection Random String Generator
+-- Anti-Detection Random Name Generator
 local function RandomName(length)
     length = length or math.random(10, 18)
     local str = ""
@@ -23,7 +23,7 @@ local function RandomName(length)
     return str
 end
 
--- Helper: Undetectable Parent Finder
+-- Secure Parent
 local function GetSecureParent()
     local hui = gethui()
     if hui then
@@ -49,10 +49,8 @@ end
 -- Create Window
 function VoltClips:CreateWindow(options)
     options = options or {}
-    local windowTitle = options.Title or "VoltClips"
-    local logoId = options.Logo or "rbxassetid://483225200"
+    local windowTitle = options.Title or "NEVERLOOSE"
     local gearIconId = "rbxassetid://11347197194"
-    local closeIconId = "rbxassetid://135341415849911"
 
     -- ScreenGui Setup (Protected)
     local ScreenGui = Instance.new("ScreenGui")
@@ -63,48 +61,48 @@ function VoltClips:CreateWindow(options)
     protectgui(ScreenGui)
     ScreenGui.Parent = GetSecureParent()
 
-    -- Color Palette (Enhanced Neverlose Theme)
+    -- Color Palette (Pure Neverlose Dark Theme)
     local Theme = {
-        MainBg = Color3.fromRGB(10, 13, 20),
-        SidebarBg = Color3.fromRGB(14, 18, 28),
-        HeaderBg = Color3.fromRGB(12, 15, 24),
-        SectionBg = Color3.fromRGB(16, 21, 33),
-        CardBorder = Color3.fromRGB(26, 34, 52),
-        Accent = Color3.fromRGB(0, 162, 255),
-        AccentHover = Color3.fromRGB(30, 180, 255),
-        TextBright = Color3.fromRGB(245, 248, 255),
-        TextMuted = Color3.fromRGB(125, 135, 160),
-        ToggleOff = Color3.fromRGB(24, 30, 46),
-        InputBg = Color3.fromRGB(20, 26, 40),
-        InputBorder = Color3.fromRGB(32, 42, 64),
-        ModalOverlay = Color3.fromRGB(4, 6, 10),
-        ModalBg = Color3.fromRGB(15, 20, 30)
+        MainBg = Color3.fromRGB(11, 15, 23),
+        SidebarBg = Color3.fromRGB(14, 19, 29),
+        HeaderBg = Color3.fromRGB(12, 16, 25),
+        SectionBg = Color3.fromRGB(16, 22, 34),
+        CardBorder = Color3.fromRGB(25, 34, 53),
+        Accent = Color3.fromRGB(0, 150, 255),
+        AccentHover = Color3.fromRGB(30, 175, 255),
+        TextBright = Color3.fromRGB(240, 245, 255),
+        TextMuted = Color3.fromRGB(120, 132, 158),
+        ToggleOff = Color3.fromRGB(22, 29, 44),
+        InputBg = Color3.fromRGB(19, 25, 38),
+        InputBorder = Color3.fromRGB(30, 41, 62),
+        ModalOverlay = Color3.fromRGB(5, 7, 12),
+        ModalBg = Color3.fromRGB(15, 21, 32)
     }
 
-    -- Main Container Frame (Увеличен до 740x500)
+    -- Main Container Frame (ClipsDescendants = FALSE чтобы окно настроек не обрезалось!)
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = RandomName()
-    MainFrame.Size = UDim2.new(0, 740, 0, 500)
-    MainFrame.Position = UDim2.new(0.5, -370, 0.5, -250)
+    MainFrame.Size = UDim2.new(0, 720, 0, 480)
+    MainFrame.Position = UDim2.new(0.5, -360, 0.5, -240)
     MainFrame.BackgroundColor3 = Theme.MainBg
     MainFrame.BorderSizePixel = 0
-    MainFrame.ClipsDescendants = true
+    MainFrame.ClipsDescendants = false
     MainFrame.Parent = ScreenGui
 
     local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 10)
+    MainCorner.CornerRadius = UDim.new(0, 8)
     MainCorner.Parent = MainFrame
 
     local MainStroke = Instance.new("UIStroke")
     MainStroke.Color = Theme.CardBorder
-    MainStroke.Thickness = 1.5
+    MainStroke.Thickness = 1.2
     MainStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     MainStroke.Parent = MainFrame
 
     local GlowStroke = Instance.new("UIStroke")
     GlowStroke.Color = Theme.Accent
-    GlowStroke.Transparency = 0.7
-    GlowStroke.Thickness = 1.2
+    GlowStroke.Transparency = 0.75
+    GlowStroke.Thickness = 1
     GlowStroke.Parent = MainFrame
 
     -- Dragging System for Main Window
@@ -114,16 +112,16 @@ function VoltClips:CreateWindow(options)
         MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 
-    -- Top Header / Titlebar
+    -- Top Header
     local Header = Instance.new("Frame")
     Header.Name = RandomName()
-    Header.Size = UDim2.new(1, 0, 0, 48)
+    Header.Size = UDim2.new(1, 0, 0, 46)
     Header.BackgroundColor3 = Theme.HeaderBg
     Header.BorderSizePixel = 0
     Header.Parent = MainFrame
 
     local HeaderCorner = Instance.new("UICorner")
-    HeaderCorner.CornerRadius = UDim.new(0, 10)
+    HeaderCorner.CornerRadius = UDim.new(0, 8)
     HeaderCorner.Parent = Header
 
     local HeaderLine = Instance.new("Frame")
@@ -160,7 +158,7 @@ function VoltClips:CreateWindow(options)
         end
     end)
 
-    -- Dynamic Header Container (Project Logo & Titles)
+    -- Header Title & Sleek "NL" Logo Badge
     local HeaderTitleContainer = Instance.new("Frame")
     HeaderTitleContainer.Name = RandomName()
     HeaderTitleContainer.Size = UDim2.new(1, -20, 1, 0)
@@ -175,40 +173,47 @@ function VoltClips:CreateWindow(options)
     HeaderLayout.SortOrder = Enum.SortOrder.LayoutOrder
     HeaderLayout.Parent = HeaderTitleContainer
 
-    -- Logo Image
-    local LogoImage = Instance.new("ImageLabel")
-    LogoImage.Name = RandomName()
-    LogoImage.Size = UDim2.new(0, 26, 0, 26)
-    LogoImage.BackgroundTransparency = 1
-    LogoImage.Image = logoId
-    LogoImage.LayoutOrder = 1
-    LogoImage.Parent = HeaderTitleContainer
+    -- Stylish "NL" Text Badge Logo
+    local LogoBadge = Instance.new("Frame")
+    LogoBadge.Name = RandomName()
+    LogoBadge.Size = UDim2.new(0, 26, 0, 24)
+    LogoBadge.BackgroundColor3 = Theme.InputBg
+    LogoBadge.BorderSizePixel = 0
+    LogoBadge.LayoutOrder = 1
+    LogoBadge.Parent = HeaderTitleContainer
 
+    local LogoBadgeCorner = Instance.new("UICorner")
+    LogoBadgeCorner.CornerRadius = UDim.new(0, 5)
+    LogoBadgeCorner.Parent = LogoBadge
+
+    local LogoBadgeStroke = Instance.new("UIStroke")
+    LogoBadgeStroke.Color = Theme.Accent
+    LogoBadgeStroke.Thickness = 1
+    LogoBadgeStroke.Parent = LogoBadge
+
+    local LogoText = Instance.new("TextLabel")
+    LogoText.Size = UDim2.new(1, 0, 1, 0)
+    LogoText.BackgroundTransparency = 1
+    LogoText.Text = "NL"
+    LogoText.TextColor3 = Theme.Accent
+    LogoText.TextSize = 12
+    LogoText.Font = Enum.Font.GothamBold
+    LogoText.Parent = LogoBadge
+
+    -- Clean Title
     local TitleLabel = Instance.new("TextLabel")
     TitleLabel.Name = RandomName()
     TitleLabel.AutomaticSize = Enum.AutomaticSize.X
     TitleLabel.Size = UDim2.new(0, 0, 1, 0)
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Text = windowTitle
+    TitleLabel.Text = string.upper(windowTitle)
     TitleLabel.TextColor3 = Theme.TextBright
-    TitleLabel.TextSize = 15
+    TitleLabel.TextSize = 14
     TitleLabel.Font = Enum.Font.GothamBold
     TitleLabel.LayoutOrder = 2
     TitleLabel.Parent = HeaderTitleContainer
 
-    local SubTitleLabel = Instance.new("TextLabel")
-    SubTitleLabel.Name = RandomName()
-    SubTitleLabel.AutomaticSize = Enum.AutomaticSize.X
-    SubTitleLabel.Size = UDim2.new(0, 0, 1, 0)
-    SubTitleLabel.BackgroundTransparency = 1
-    SubTitleLabel.Text = "|   NEVERLOOSE"
-    SubTitleLabel.TextColor3 = Theme.Accent
-    SubTitleLabel.TextSize = 12
-    SubTitleLabel.Font = Enum.Font.GothamMedium
-    SubTitleLabel.LayoutOrder = 3
-    SubTitleLabel.Parent = HeaderTitleContainer
-
-    -- Notification Holder Frame
+    -- Notification Holder
     local NotificationHolder = Instance.new("Frame")
     NotificationHolder.Name = RandomName()
     NotificationHolder.Size = UDim2.new(0, 280, 1, -20)
@@ -223,17 +228,17 @@ function VoltClips:CreateWindow(options)
     NotifLayout.SortOrder = Enum.SortOrder.LayoutOrder
     NotifLayout.Parent = NotificationHolder
 
-    -- Sidebar for Tabs
+    -- Sidebar
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomName()
-    Sidebar.Size = UDim2.new(0, 165, 1, -48)
-    Sidebar.Position = UDim2.new(0, 0, 0, 48)
+    Sidebar.Size = UDim2.new(0, 160, 1, -46)
+    Sidebar.Position = UDim2.new(0, 0, 0, 46)
     Sidebar.BackgroundColor3 = Theme.SidebarBg
     Sidebar.BorderSizePixel = 0
     Sidebar.Parent = MainFrame
 
     local SidebarCorner = Instance.new("UICorner")
-    SidebarCorner.CornerRadius = UDim.new(0, 10)
+    SidebarCorner.CornerRadius = UDim.new(0, 8)
     SidebarCorner.Parent = Sidebar
 
     local SidebarLine = Instance.new("Frame")
@@ -256,18 +261,18 @@ function VoltClips:CreateWindow(options)
 
     local TabListLayout = Instance.new("UIListLayout")
     TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabListLayout.Padding = UDim.new(0, 6)
+    TabListLayout.Padding = UDim.new(0, 5)
     TabListLayout.Parent = TabHolder
 
     -- Content Area
     local ContentArea = Instance.new("Frame")
     ContentArea.Name = RandomName()
-    ContentArea.Size = UDim2.new(1, -165, 1, -48)
-    ContentArea.Position = UDim2.new(0, 165, 0, 48)
+    ContentArea.Size = UDim2.new(1, -160, 1, -46)
+    ContentArea.Position = UDim2.new(0, 160, 0, 46)
     ContentArea.BackgroundTransparency = 1
     ContentArea.Parent = MainFrame
 
-    -- Modal Overlay & Popup System (Settings Window)
+    -- Independent Modal Overlay & Settings Popup (Parented to ScreenGui so it NEVER clips!)
     local ModalOverlay = Instance.new("TextButton")
     ModalOverlay.Name = RandomName()
     ModalOverlay.Size = UDim2.new(1, 0, 1, 0)
@@ -278,12 +283,12 @@ function VoltClips:CreateWindow(options)
     ModalOverlay.AutoButtonColor = false
     ModalOverlay.Visible = false
     ModalOverlay.ZIndex = 100
-    ModalOverlay.Parent = MainFrame
+    ModalOverlay.Parent = ScreenGui -- Привязано к ScreenGui для свободы движения!
 
     local ModalFrame = Instance.new("Frame")
     ModalFrame.Name = RandomName()
-    ModalFrame.Size = UDim2.new(0, 380, 0, 280)
-    ModalFrame.Position = UDim2.new(0.5, -190, 0.5, -140)
+    ModalFrame.Size = UDim2.new(0, 360, 0, 260)
+    ModalFrame.Position = UDim2.new(0.5, -180, 0.5, -130)
     ModalFrame.BackgroundColor3 = Theme.ModalBg
     ModalFrame.BorderSizePixel = 0
     ModalFrame.ZIndex = 101
@@ -295,13 +300,13 @@ function VoltClips:CreateWindow(options)
 
     local ModalStroke = Instance.new("UIStroke")
     ModalStroke.Color = Theme.Accent
-    ModalStroke.Thickness = 1.5
+    ModalStroke.Thickness = 1.2
     ModalStroke.Parent = ModalFrame
 
-    -- Modal Header (Draggable)
+    -- Draggable Modal Header
     local ModalHeader = Instance.new("Frame")
     ModalHeader.Name = RandomName()
-    ModalHeader.Size = UDim2.new(1, 0, 0, 40)
+    ModalHeader.Size = UDim2.new(1, 0, 0, 38)
     ModalHeader.BackgroundColor3 = Theme.HeaderBg
     ModalHeader.BorderSizePixel = 0
     ModalHeader.ZIndex = 102
@@ -311,7 +316,7 @@ function VoltClips:CreateWindow(options)
     ModalHeaderCorner.CornerRadius = UDim.new(0, 8)
     ModalHeaderCorner.Parent = ModalHeader
 
-    -- Draggable functionality for Modal Window
+    -- Modal Dragging Logic
     local mDragging, mDragInput, mDragStart, mStartPos
     local function updateModal(input)
         local delta = input.Position - mDragStart
@@ -346,8 +351,8 @@ function VoltClips:CreateWindow(options)
 
     local ModalGearIcon = Instance.new("ImageLabel")
     ModalGearIcon.Name = RandomName()
-    ModalGearIcon.Size = UDim2.new(0, 18, 0, 18)
-    ModalGearIcon.Position = UDim2.new(0, 12, 0.5, -9)
+    ModalGearIcon.Size = UDim2.new(0, 16, 0, 16)
+    ModalGearIcon.Position = UDim2.new(0, 12, 0.5, -8)
     ModalGearIcon.BackgroundTransparency = 1
     ModalGearIcon.Image = gearIconId
     ModalGearIcon.ImageColor3 = Theme.Accent
@@ -357,7 +362,7 @@ function VoltClips:CreateWindow(options)
     local ModalTitle = Instance.new("TextLabel")
     ModalTitle.Name = RandomName()
     ModalTitle.Size = UDim2.new(1, -70, 1, 0)
-    ModalTitle.Position = UDim2.new(0, 38, 0, 0)
+    ModalTitle.Position = UDim2.new(0, 36, 0, 0)
     ModalTitle.BackgroundTransparency = 1
     ModalTitle.Text = "Settings"
     ModalTitle.TextColor3 = Theme.TextBright
@@ -367,31 +372,43 @@ function VoltClips:CreateWindow(options)
     ModalTitle.ZIndex = 103
     ModalTitle.Parent = ModalHeader
 
-    -- Modal Close Button (Custom Image Asset Icon)
-    local ModalCloseBtn = Instance.new("ImageButton")
+    -- Sleek & Flat Close Button (Переработана уродливая картинка!)
+    local ModalCloseBtn = Instance.new("TextButton")
     ModalCloseBtn.Name = RandomName()
-    ModalCloseBtn.Size = UDim2.new(0, 20, 0, 20)
-    ModalCloseBtn.Position = UDim2.new(1, -30, 0.5, -10)
-    ModalCloseBtn.BackgroundTransparency = 1
-    ModalCloseBtn.Image = closeIconId
-    ModalCloseBtn.ImageColor3 = Theme.TextMuted
+    ModalCloseBtn.Size = UDim2.new(0, 22, 0, 22)
+    ModalCloseBtn.Position = UDim2.new(1, -28, 0.5, -11)
+    ModalCloseBtn.BackgroundColor3 = Theme.InputBg
+    ModalCloseBtn.Text = "✕"
+    ModalCloseBtn.TextColor3 = Theme.TextMuted
+    ModalCloseBtn.TextSize = 11
+    ModalCloseBtn.Font = Enum.Font.GothamBold
+    ModalCloseBtn.BorderSizePixel = 0
     ModalCloseBtn.ZIndex = 104
     ModalCloseBtn.Parent = ModalHeader
 
+    local ModalCloseCorner = Instance.new("UICorner")
+    ModalCloseCorner.CornerRadius = UDim.new(0, 5)
+    ModalCloseCorner.Parent = ModalCloseBtn
+
+    local ModalCloseStroke = Instance.new("UIStroke")
+    ModalCloseStroke.Color = Theme.InputBorder
+    ModalCloseStroke.Thickness = 1
+    ModalCloseStroke.Parent = ModalCloseBtn
+
     ModalCloseBtn.MouseEnter:Connect(function()
-        Tween(ModalCloseBtn, TweenInfo.new(0.15), {ImageColor3 = Color3.fromRGB(240, 70, 70)})
+        Tween(ModalCloseBtn, TweenInfo.new(0.12), {BackgroundColor3 = Color3.fromRGB(220, 50, 50), TextColor3 = Color3.fromRGB(255, 255, 255)})
     end)
     ModalCloseBtn.MouseLeave:Connect(function()
-        Tween(ModalCloseBtn, TweenInfo.new(0.15), {ImageColor3 = Theme.TextMuted})
+        Tween(ModalCloseBtn, TweenInfo.new(0.12), {BackgroundColor3 = Theme.InputBg, TextColor3 = Theme.TextMuted})
     end)
 
     local ModalContent = Instance.new("ScrollingFrame")
     ModalContent.Name = RandomName()
-    ModalContent.Size = UDim2.new(1, -20, 1, -50)
-    ModalContent.Position = UDim2.new(0, 10, 0, 45)
+    ModalContent.Size = UDim2.new(1, -20, 1, -48)
+    ModalContent.Position = UDim2.new(0, 10, 0, 43)
     ModalContent.BackgroundTransparency = 1
     ModalContent.BorderSizePixel = 0
-    ModalContent.ScrollBarThickness = 3
+    ModalContent.ScrollBarThickness = 2
     ModalContent.ScrollBarImageColor3 = Theme.Accent
     ModalContent.ZIndex = 102
     ModalContent.Parent = ModalFrame
@@ -415,7 +432,7 @@ function VoltClips:CreateWindow(options)
 
     local function CloseModal()
         Tween(ModalFrame, TweenInfo.new(0.12, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-            Size = UDim2.new(0, 320, 0, 240)
+            Size = UDim2.new(0, 320, 0, 230)
         })
         Tween(ModalOverlay, TweenInfo.new(0.12), {BackgroundTransparency = 1})
         task.wait(0.12)
@@ -443,7 +460,7 @@ function VoltClips:CreateWindow(options)
 
         local Toast = Instance.new("Frame")
         Toast.Name = RandomName()
-        Toast.Size = UDim2.new(1, 0, 0, 52)
+        Toast.Size = UDim2.new(1, 0, 0, 50)
         Toast.BackgroundColor3 = Theme.HeaderBg
         Toast.BorderSizePixel = 0
         Toast.Position = UDim2.new(1, 50, 0, 0)
@@ -461,7 +478,7 @@ function VoltClips:CreateWindow(options)
 
         local ToastTitle = Instance.new("TextLabel")
         ToastTitle.Size = UDim2.new(1, -20, 0, 20)
-        ToastTitle.Position = UDim2.new(0, 10, 0, 6)
+        ToastTitle.Position = UDim2.new(0, 10, 0, 5)
         ToastTitle.BackgroundTransparency = 1
         ToastTitle.Text = title
         ToastTitle.TextColor3 = Theme.TextBright
@@ -473,7 +490,7 @@ function VoltClips:CreateWindow(options)
 
         local ToastDesc = Instance.new("TextLabel")
         ToastDesc.Size = UDim2.new(1, -20, 0, 20)
-        ToastDesc.Position = UDim2.new(0, 10, 0, 24)
+        ToastDesc.Position = UDim2.new(0, 10, 0, 23)
         ToastDesc.BackgroundTransparency = 1
         ToastDesc.Text = content
         ToastDesc.TextColor3 = Theme.TextMuted
@@ -502,13 +519,13 @@ function VoltClips:CreateWindow(options)
         ModalOverlay.BackgroundTransparency = 1
         ModalOverlay.Visible = true
 
-        ModalFrame.Size = UDim2.new(0, 320, 0, 240)
-        ModalFrame.Position = UDim2.new(0.5, -190, 0.5, -140)
+        ModalFrame.Size = UDim2.new(0, 320, 0, 230)
+        ModalFrame.Position = UDim2.new(0.5, -180, 0.5, -130)
 
-        Tween(ModalOverlay, TweenInfo.new(0.18), {BackgroundTransparency = 0.55})
-        Tween(ModalFrame, TweenInfo.new(0.2, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 380, 0, 280),
-            Position = UDim2.new(0.5, -190, 0.5, -140)
+        Tween(ModalOverlay, TweenInfo.new(0.15), {BackgroundTransparency = 0.55})
+        Tween(ModalFrame, TweenInfo.new(0.18, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 360, 0, 260),
+            Position = UDim2.new(0.5, -180, 0.5, -130)
         })
 
         local ModalAPI = {}
@@ -526,7 +543,7 @@ function VoltClips:CreateWindow(options)
         end
     end
 
-    -- Internal Slider Helper
+    -- Smooth Slider Implementation
     function WindowObj:InternalCreateSlider(parent, opts, customZIndex)
         opts = opts or {}
         local sliderName = opts.Name or "Slider"
@@ -539,7 +556,7 @@ function VoltClips:CreateWindow(options)
 
         local SliderFrame = Instance.new("Frame")
         SliderFrame.Name = RandomName()
-        SliderFrame.Size = UDim2.new(1, 0, 0, 48)
+        SliderFrame.Size = UDim2.new(1, 0, 0, 46)
         SliderFrame.BackgroundColor3 = Theme.InputBg
         SliderFrame.BorderSizePixel = 0
         SliderFrame.ZIndex = zIdx
@@ -557,7 +574,7 @@ function VoltClips:CreateWindow(options)
         local Label = Instance.new("TextLabel")
         Label.Name = RandomName()
         Label.Size = UDim2.new(1, -70, 0, 20)
-        Label.Position = UDim2.new(0, 10, 0, 5)
+        Label.Position = UDim2.new(0, 10, 0, 4)
         Label.BackgroundTransparency = 1
         Label.Text = sliderName
         Label.TextColor3 = Theme.TextBright
@@ -569,12 +586,12 @@ function VoltClips:CreateWindow(options)
 
         local ValueBox = Instance.new("TextBox")
         ValueBox.Name = RandomName()
-        ValueBox.Size = UDim2.new(0, 50, 0, 20)
-        ValueBox.Position = UDim2.new(1, -60, 0, 5)
+        ValueBox.Size = UDim2.new(0, 46, 0, 18)
+        ValueBox.Position = UDim2.new(1, -56, 0, 5)
         ValueBox.BackgroundColor3 = Theme.SectionBg
         ValueBox.Text = tostring(defaultVal)
         ValueBox.TextColor3 = Theme.Accent
-        ValueBox.TextSize = 12
+        ValueBox.TextSize = 11
         ValueBox.Font = Enum.Font.GothamBold
         ValueBox.BorderSizePixel = 0
         ValueBox.ClearTextOnFocus = false
@@ -592,8 +609,8 @@ function VoltClips:CreateWindow(options)
 
         local Track = Instance.new("Frame")
         Track.Name = RandomName()
-        Track.Size = UDim2.new(1, -20, 0, 6)
-        Track.Position = UDim2.new(0, 10, 0, 32)
+        Track.Size = UDim2.new(1, -20, 0, 5)
+        Track.Position = UDim2.new(0, 10, 0, 31)
         Track.BackgroundColor3 = Theme.SectionBg
         Track.BorderSizePixel = 0
         Track.ZIndex = zIdx + 1
@@ -617,7 +634,7 @@ function VoltClips:CreateWindow(options)
 
         local Knob = Instance.new("Frame")
         Knob.Name = RandomName()
-        Knob.Size = UDim2.new(0, 12, 0, 12)
+        Knob.Size = UDim2.new(0, 11, 0, 11)
         Knob.AnchorPoint = Vector2.new(0.5, 0.5)
         Knob.Position = UDim2.new(1, 0, 0.5, 0)
         Knob.BackgroundColor3 = Theme.TextBright
@@ -642,7 +659,9 @@ function VoltClips:CreateWindow(options)
             currentValue = val
 
             local alpha = (val - minVal) / math.max(maxVal - minVal, 1)
-            Tween(Fill, TweenInfo.new(0.08, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            
+            -- Плавное твин-обновление размера
+            Tween(Fill, TweenInfo.new(0.06, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 Size = UDim2.new(alpha, 0, 1, 0)
             })
             ValueBox.Text = tostring(val)
@@ -700,7 +719,7 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- Internal Toggle Helper (Gear Icon moved to the LEFT of the Switch)
+    -- Internal Toggle Helper (Gear Icon on the LEFT of the Switch)
     function WindowObj:InternalCreateToggle(parent, opts, customZIndex)
         opts = opts or {}
         local toggleName = opts.Name or "Toggle"
@@ -727,10 +746,9 @@ function VoltClips:CreateWindow(options)
         ToggleStroke.Thickness = 1
         ToggleStroke.Parent = ToggleFrame
 
-        -- Label Text
         local Label = Instance.new("TextLabel")
         Label.Name = RandomName()
-        Label.Size = UDim2.new(1, hasSettings and -90 or -58, 1, 0)
+        Label.Size = UDim2.new(1, hasSettings and -85 or -55, 1, 0)
         Label.Position = UDim2.new(0, 10, 0, 0)
         Label.BackgroundTransparency = 1
         Label.Text = toggleName
@@ -741,11 +759,11 @@ function VoltClips:CreateWindow(options)
         Label.ZIndex = zIdx + 1
         Label.Parent = ToggleFrame
 
-        -- Toggle Switch Frame (Positioned at far right)
+        -- Switch Button (Far right)
         local SwitchBg = Instance.new("TextButton")
         SwitchBg.Name = RandomName()
-        SwitchBg.Size = UDim2.new(0, 38, 0, 20)
-        SwitchBg.Position = UDim2.new(1, -48, 0.5, -10)
+        SwitchBg.Size = UDim2.new(0, 36, 0, 18)
+        SwitchBg.Position = UDim2.new(1, -46, 0.5, -9)
         SwitchBg.BackgroundColor3 = defaultState and Theme.Accent or Theme.ToggleOff
         SwitchBg.BorderSizePixel = 0
         SwitchBg.Text = ""
@@ -759,8 +777,8 @@ function VoltClips:CreateWindow(options)
 
         local SwitchDot = Instance.new("Frame")
         SwitchDot.Name = RandomName()
-        SwitchDot.Size = UDim2.new(0, 14, 0, 14)
-        SwitchDot.Position = defaultState and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
+        SwitchDot.Size = UDim2.new(0, 12, 0, 12)
+        SwitchDot.Position = defaultState and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
         SwitchDot.BackgroundColor3 = Theme.TextBright
         SwitchDot.BorderSizePixel = 0
         SwitchDot.ZIndex = zIdx + 2
@@ -770,12 +788,12 @@ function VoltClips:CreateWindow(options)
         DotCorner.CornerRadius = UDim.new(1, 0)
         DotCorner.Parent = SwitchDot
 
-        -- Gear Icon Settings Button (Positioned to the LEFT of the Switch)
+        -- Gear Icon (LEFT of Switch)
         if hasSettings then
             local gearBtn = Instance.new("ImageButton")
             gearBtn.Name = RandomName()
-            gearBtn.Size = UDim2.new(0, 20, 0, 20)
-            gearBtn.Position = UDim2.new(1, -78, 0.5, -10) -- Слева от тумблера!
+            gearBtn.Size = UDim2.new(0, 18, 0, 18)
+            gearBtn.Position = UDim2.new(1, -74, 0.5, -9)
             gearBtn.BackgroundTransparency = 1
             gearBtn.Image = gearIconId
             gearBtn.ImageColor3 = Theme.TextMuted
@@ -783,10 +801,10 @@ function VoltClips:CreateWindow(options)
             gearBtn.Parent = ToggleFrame
 
             gearBtn.MouseEnter:Connect(function()
-                Tween(gearBtn, TweenInfo.new(0.15), {ImageColor3 = Theme.Accent})
+                Tween(gearBtn, TweenInfo.new(0.12), {ImageColor3 = Theme.Accent})
             end)
             gearBtn.MouseLeave:Connect(function()
-                Tween(gearBtn, TweenInfo.new(0.15), {ImageColor3 = Theme.TextMuted})
+                Tween(gearBtn, TweenInfo.new(0.12), {ImageColor3 = Theme.TextMuted})
             end)
 
             gearBtn.MouseButton1Click:Connect(function()
@@ -799,10 +817,10 @@ function VoltClips:CreateWindow(options)
         local function SetState(state, ignoreCallback)
             currentState = state
             local targetBg = currentState and Theme.Accent or Theme.ToggleOff
-            local targetPos = currentState and UDim2.new(1, -17, 0.5, -7) or UDim2.new(0, 3, 0.5, -7)
+            local targetPos = currentState and UDim2.new(1, -15, 0.5, -6) or UDim2.new(0, 3, 0.5, -6)
 
-            Tween(SwitchBg, TweenInfo.new(0.18), {BackgroundColor3 = targetBg})
-            Tween(SwitchDot, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = targetPos})
+            Tween(SwitchBg, TweenInfo.new(0.15), {BackgroundColor3 = targetBg})
+            Tween(SwitchDot, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {Position = targetPos})
 
             if not ignoreCallback then
                 task.spawn(callback, currentState)
@@ -824,13 +842,13 @@ function VoltClips:CreateWindow(options)
         }
     end
 
-    -- Create Tab Method
+    -- Create Tab
     function WindowObj:CreateTab(tabName, iconId)
         tabName = tabName or "Tab"
 
         local TabBtn = Instance.new("TextButton")
         TabBtn.Name = RandomName()
-        TabBtn.Size = UDim2.new(1, 0, 0, 36)
+        TabBtn.Size = UDim2.new(1, 0, 0, 34)
         TabBtn.BackgroundColor3 = Theme.MainBg
         TabBtn.BackgroundTransparency = 1
         TabBtn.BorderSizePixel = 0
@@ -844,8 +862,8 @@ function VoltClips:CreateWindow(options)
 
         local ActiveIndicator = Instance.new("Frame")
         ActiveIndicator.Name = RandomName()
-        ActiveIndicator.Size = UDim2.new(0, 3, 0, 20)
-        ActiveIndicator.Position = UDim2.new(0, 0, 0.5, -10)
+        ActiveIndicator.Size = UDim2.new(0, 3, 0, 18)
+        ActiveIndicator.Position = UDim2.new(0, 0, 0.5, -9)
         ActiveIndicator.BackgroundColor3 = Theme.Accent
         ActiveIndicator.BorderSizePixel = 0
         ActiveIndicator.BackgroundTransparency = 1
@@ -886,14 +904,14 @@ function VoltClips:CreateWindow(options)
         PageFrame.Position = UDim2.new(0, 10, 0, 10)
         PageFrame.BackgroundTransparency = 1
         PageFrame.BorderSizePixel = 0
-        PageFrame.ScrollBarThickness = 3
+        PageFrame.ScrollBarThickness = 2
         PageFrame.ScrollBarImageColor3 = Theme.Accent
         PageFrame.Visible = false
         PageFrame.Parent = ContentArea
 
         local PageLayout = Instance.new("UIListLayout")
         PageLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        PageLayout.Padding = UDim.new(0, 12)
+        PageLayout.Padding = UDim.new(0, 10)
         PageLayout.Parent = PageFrame
 
         PageLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
@@ -911,16 +929,16 @@ function VoltClips:CreateWindow(options)
         local function ActivateTab()
             for _, t in ipairs(WindowObj.Tabs) do
                 t.Page.Visible = false
-                Tween(t.Button, TweenInfo.new(0.15), {BackgroundTransparency = 1})
-                Tween(t.Indicator, TweenInfo.new(0.15), {BackgroundTransparency = 1})
-                Tween(t.Label, TweenInfo.new(0.15), {TextColor3 = Theme.TextMuted})
+                Tween(t.Button, TweenInfo.new(0.12), {BackgroundTransparency = 1})
+                Tween(t.Indicator, TweenInfo.new(0.12), {BackgroundTransparency = 1})
+                Tween(t.Label, TweenInfo.new(0.12), {TextColor3 = Theme.TextMuted})
             end
 
             PageFrame.Visible = true
             WindowObj.ActiveTab = TabObj
-            Tween(TabBtn, TweenInfo.new(0.15), {BackgroundTransparency = 0.85, BackgroundColor3 = Theme.Accent})
-            Tween(ActiveIndicator, TweenInfo.new(0.15), {BackgroundTransparency = 0})
-            Tween(TabLabel, TweenInfo.new(0.15), {TextColor3 = Theme.TextBright})
+            Tween(TabBtn, TweenInfo.new(0.12), {BackgroundTransparency = 0.85, BackgroundColor3 = Theme.Accent})
+            Tween(ActiveIndicator, TweenInfo.new(0.12), {BackgroundTransparency = 0})
+            Tween(TabLabel, TweenInfo.new(0.12), {TextColor3 = Theme.TextBright})
         end
 
         TabBtn.MouseButton1Click:Connect(ActivateTab)
@@ -942,7 +960,7 @@ function VoltClips:CreateWindow(options)
             SectionFrame.Parent = PageFrame
 
             local SectionCorner = Instance.new("UICorner")
-            SectionCorner.CornerRadius = UDim.new(0, 8)
+            SectionCorner.CornerRadius = UDim.new(0, 7)
             SectionCorner.Parent = SectionFrame
 
             local SectionStroke = Instance.new("UIStroke")
@@ -952,8 +970,8 @@ function VoltClips:CreateWindow(options)
 
             local SecTitle = Instance.new("TextLabel")
             SecTitle.Name = RandomName()
-            SecTitle.Size = UDim2.new(1, -20, 0, 28)
-            SecTitle.Position = UDim2.new(0, 10, 0, 4)
+            SecTitle.Size = UDim2.new(1, -20, 0, 26)
+            SecTitle.Position = UDim2.new(0, 10, 0, 3)
             SecTitle.BackgroundTransparency = 1
             SecTitle.Text = string.upper(sectionName)
             SecTitle.TextColor3 = Theme.Accent
@@ -965,7 +983,7 @@ function VoltClips:CreateWindow(options)
             local Line = Instance.new("Frame")
             Line.Name = RandomName()
             Line.Size = UDim2.new(1, -20, 0, 1)
-            Line.Position = UDim2.new(0, 10, 0, 32)
+            Line.Position = UDim2.new(0, 10, 0, 30)
             Line.BackgroundColor3 = Theme.CardBorder
             Line.BorderSizePixel = 0
             Line.Parent = SectionFrame
@@ -973,18 +991,18 @@ function VoltClips:CreateWindow(options)
             local Container = Instance.new("Frame")
             Container.Name = RandomName()
             Container.Size = UDim2.new(1, -20, 0, 0)
-            Container.Position = UDim2.new(0, 10, 0, 38)
+            Container.Position = UDim2.new(0, 10, 0, 36)
             Container.BackgroundTransparency = 1
             Container.Parent = SectionFrame
 
             local ContainerLayout = Instance.new("UIListLayout")
             ContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            ContainerLayout.Padding = UDim.new(0, 8)
+            ContainerLayout.Padding = UDim.new(0, 7)
             ContainerLayout.Parent = Container
 
             ContainerLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
                 Container.Size = UDim2.new(1, -20, 0, ContainerLayout.AbsoluteContentSize.Y)
-                SectionFrame.Size = UDim2.new(1, 0, 0, ContainerLayout.AbsoluteContentSize.Y + 46)
+                SectionFrame.Size = UDim2.new(1, 0, 0, ContainerLayout.AbsoluteContentSize.Y + 44)
             end)
 
             local SectionObj = {}
@@ -1024,10 +1042,10 @@ function VoltClips:CreateWindow(options)
                 BtnStroke.Parent = BtnFrame
 
                 BtnFrame.MouseEnter:Connect(function()
-                    Tween(BtnFrame, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Accent, TextColor3 = Color3.fromRGB(255, 255, 255)})
+                    Tween(BtnFrame, TweenInfo.new(0.12), {BackgroundColor3 = Theme.Accent, TextColor3 = Color3.fromRGB(255, 255, 255)})
                 end)
                 BtnFrame.MouseLeave:Connect(function()
-                    Tween(BtnFrame, TweenInfo.new(0.15), {BackgroundColor3 = Theme.InputBg, TextColor3 = Theme.TextBright})
+                    Tween(BtnFrame, TweenInfo.new(0.12), {BackgroundColor3 = Theme.InputBg, TextColor3 = Theme.TextBright})
                 end)
 
                 BtnFrame.MouseButton1Click:Connect(function()
