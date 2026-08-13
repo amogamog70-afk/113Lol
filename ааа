@@ -1,5 +1,5 @@
 -- ================================================================= --
---                 VOLTCLIPS UI LIBRARY (BUILT-IN ICONS)             --
+--            VOLTCLIPS UI LIBRARY (NEVERLOSE CS2 REDESIGN)          --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -18,16 +18,16 @@ local BuiltInIcons = {
     ["Movement"] = "rbxassetid://136160678435000"
 }
 
--- Стильная палитра Neverlose 2.0
+-- Глубокая темная палитра
 local Theme = {
-    Background = Color3.fromRGB(11, 13, 17),
-    Sidebar    = Color3.fromRGB(15, 17, 23),
-    Card       = Color3.fromRGB(18, 21, 28),
-    CardStroke = Color3.fromRGB(35, 41, 55),
-    Element    = Color3.fromRGB(13, 15, 20),
-    Accent     = Color3.fromRGB(85, 115, 255),
+    Background = Color3.fromRGB(10, 12, 16),
+    Sidebar    = Color3.fromRGB(14, 16, 21),
+    Card       = Color3.fromRGB(16, 19, 25),
+    CardStroke = Color3.fromRGB(32, 38, 52),
+    Element    = Color3.fromRGB(20, 23, 31),
+    Accent     = Color3.fromRGB(80, 115, 255),
     Text       = Color3.fromRGB(240, 243, 250),
-    SubText    = Color3.fromRGB(110, 118, 135)
+    SubText    = Color3.fromRGB(100, 108, 125)
 }
 
 local function CreateCorner(parent, radius)
@@ -41,7 +41,7 @@ local function CreateStroke(parent, color, thickness, transparency)
     local stroke = Instance.new("UIStroke")
     stroke.Color = color or Theme.CardStroke
     stroke.Thickness = thickness or 1
-    stroke.Transparency = transparency or 0.3
+    stroke.Transparency = transparency or 0.4
     stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     stroke.Parent = parent
     return stroke
@@ -59,7 +59,7 @@ function VoltClips:CreateWindow(hubTitle)
         ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
     end
 
-    -- Компактное главное окно (620x390)
+    -- Главное Окно (620x390)
     local Main = Instance.new("Frame")
     Main.Name = "MainFrame"
     Main.Size = UDim2.new(0, 620, 0, 390)
@@ -71,9 +71,9 @@ function VoltClips:CreateWindow(hubTitle)
     Main.Parent = ScreenGui
 
     CreateCorner(Main, 10)
-    CreateStroke(Main, Theme.CardStroke, 1, 0.1)
+    CreateStroke(Main, Theme.CardStroke, 1, 0.2)
 
-    -- Система перетаскивания
+    -- Драг Окна
     local dragging, dragStart, startPos
     Main.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -95,20 +95,20 @@ function VoltClips:CreateWindow(hubTitle)
     -- Левый Сайдбар
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = "Sidebar"
-    Sidebar.Size = UDim2.new(0, 52, 1, 0)
+    Sidebar.Size = UDim2.new(0, 48, 1, 0)
     Sidebar.BackgroundColor3 = Theme.Sidebar
     Sidebar.BackgroundTransparency = 0.1
     Sidebar.BorderSizePixel = 0
     Sidebar.Parent = Main
     CreateCorner(Sidebar, 10)
 
-    -- Текст-логотип VC
+    -- Логотип VC
     local Logo = Instance.new("TextLabel")
     Logo.Size = UDim2.new(1, 0, 0, 42)
     Logo.BackgroundTransparency = 1
     Logo.Text = "VC"
     Logo.TextColor3 = Theme.Accent
-    Logo.TextSize = 18
+    Logo.TextSize = 17
     Logo.Font = Enum.Font.GothamBold
     Logo.Parent = Sidebar
 
@@ -120,14 +120,14 @@ function VoltClips:CreateWindow(hubTitle)
 
     local TabListLayout = Instance.new("UIListLayout")
     TabListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    TabListLayout.Padding = UDim.new(0, 8)
+    TabListLayout.Padding = UDim.new(0, 12)
     TabListLayout.Parent = TabList
 
-    -- Верхняя панель подвкладок
+    -- Верхняя Панель Подвкладок
     local TopBar = Instance.new("Frame")
     TopBar.Name = "TopBar"
-    TopBar.Size = UDim2.new(1, -60, 0, 35)
-    TopBar.Position = UDim2.new(0, 60, 0, 5)
+    TopBar.Size = UDim2.new(1, -56, 0, 35)
+    TopBar.Position = UDim2.new(0, 56, 0, 5)
     TopBar.BackgroundTransparency = 1
     TopBar.Parent = Main
 
@@ -142,76 +142,68 @@ function VoltClips:CreateWindow(hubTitle)
     SubTabLayout.Padding = UDim.new(0, 6)
     SubTabLayout.Parent = SubTabContainer
 
-    -- Основная Рабочая Зона
+    -- Рабочая Зона
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = "ContentContainer"
-    ContentContainer.Size = UDim2.new(1, -65, 1, -45)
-    ContentContainer.Position = UDim2.new(0, 58, 0, 40)
+    ContentContainer.Size = UDim2.new(1, -62, 1, -45)
+    ContentContainer.Position = UDim2.new(0, 56, 0, 40)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = Main
 
     local Tabs = {}
     local PiecesToBreak = {}
 
-    -- Вкладки слева (С ВСТРОЕННЫМИ ИКОНКАМИ)
+    -- Главные Вкладки (БЕЗ РАМОК И КВАДРАТОВ)
     function Window:AddTab(tabName)
         local Tab = { SubTabs = {} }
 
-        -- Определение иконки из встроенной таблицы
         local imageUri = BuiltInIcons[tabName]
         if not imageUri then
             local cleanId = tostring(tabName):gsub("%D", "")
-            if #cleanId > 0 then
-                imageUri = "rbxassetid://" .. cleanId
-            else
-                imageUri = ""
-            end
+            imageUri = (#cleanId > 0) and ("rbxassetid://" .. cleanId) or ""
         end
 
+        -- Чистая кнопка без рамки
         local TabBtn = Instance.new("ImageButton")
-        TabBtn.Size = UDim2.new(0, 34, 0, 34)
-        TabBtn.BackgroundColor3 = Theme.Element
-        TabBtn.BackgroundTransparency = 0.5
+        TabBtn.Size = UDim2.new(0, 26, 0, 26)
+        TabBtn.BackgroundTransparency = 1
         TabBtn.Image = imageUri
         TabBtn.ImageColor3 = Theme.SubText
         TabBtn.ScaleType = Enum.ScaleType.Fit
         TabBtn.AutoButtonColor = false
         TabBtn.Parent = TabList
-        CreateCorner(TabBtn, 8)
-        CreateStroke(TabBtn, Theme.CardStroke, 1, 0.6)
 
         Tab.Button = TabBtn
 
-        -- Подвкладки сверху
+        -- Подвкладки (SubTabs)
         function Tab:AddSubTab(subName)
             local SubTab = {}
 
             local SubBtn = Instance.new("TextButton")
-            SubBtn.Size = UDim2.new(0, 70, 0, 24)
+            SubBtn.Size = UDim2.new(0, 68, 0, 22)
             SubBtn.BackgroundColor3 = Theme.Card
-            SubBtn.BackgroundTransparency = 0.3
+            SubBtn.BackgroundTransparency = 0.4
             SubBtn.Text = subName
             SubBtn.TextColor3 = Theme.SubText
             SubBtn.Font = Enum.Font.GothamMedium
             SubBtn.TextSize = 11
             SubBtn.Visible = false
             SubBtn.Parent = SubTabContainer
-            CreateCorner(SubBtn, 6)
+            CreateCorner(SubBtn, 5)
 
-            -- Страница с 2 колонками
             local Page = Instance.new("Frame")
             Page.Size = UDim2.new(1, -5, 1, 0)
             Page.BackgroundTransparency = 1
             Page.Visible = false
             Page.Parent = ContentContainer
 
-            -- Скроллируемые колонки
+            -- Скролл-колонки
             local LeftCol = Instance.new("ScrollingFrame")
             LeftCol.Size = UDim2.new(0.49, -2, 1, 0)
             LeftCol.BackgroundTransparency = 1
             LeftCol.ScrollBarThickness = 2
             LeftCol.ScrollBarImageColor3 = Theme.Accent
-            LeftCol.ScrollBarImageTransparency = 0.5
+            LeftCol.ScrollBarImageTransparency = 0.6
             LeftCol.BorderSizePixel = 0
             LeftCol.AutomaticCanvasSize = Enum.AutomaticSize.Y
             LeftCol.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -223,7 +215,7 @@ function VoltClips:CreateWindow(hubTitle)
             RightCol.BackgroundTransparency = 1
             RightCol.ScrollBarThickness = 2
             RightCol.ScrollBarImageColor3 = Theme.Accent
-            RightCol.ScrollBarImageTransparency = 0.5
+            RightCol.ScrollBarImageTransparency = 0.6
             RightCol.BorderSizePixel = 0
             RightCol.AutomaticCanvasSize = Enum.AutomaticSize.Y
             RightCol.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -248,7 +240,7 @@ function VoltClips:CreateWindow(hubTitle)
             SubTab.Button = SubBtn
             SubTab.Page = Page
 
-            -- Секции (Карточки)
+            -- Секции
             function SubTab:AddSection(secTitle, side)
                 local Section = {}
                 local TargetCol = (side == "right") and RightCol or LeftCol
@@ -257,10 +249,10 @@ function VoltClips:CreateWindow(hubTitle)
                 Card.Name = "CardSection"
                 Card.Size = UDim2.new(1, 0, 0, 35)
                 Card.BackgroundColor3 = Theme.Card
-                Card.BackgroundTransparency = 0.2
+                Card.BackgroundTransparency = 0.15
                 Card.Parent = TargetCol
                 CreateCorner(Card, 8)
-                CreateStroke(Card, Theme.CardStroke, 1, 0.3)
+                CreateStroke(Card, Theme.CardStroke, 1, 0.4)
 
                 table.insert(PiecesToBreak, Card)
 
@@ -282,35 +274,45 @@ function VoltClips:CreateWindow(hubTitle)
                 Container.Parent = Card
 
                 local CList = Instance.new("UIListLayout")
-                CList.Padding = UDim.new(0, 6)
+                CList.Padding = UDim.new(0, 8)
                 CList.Parent = Container
 
                 CList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
                     Card.Size = UDim2.new(1, 0, 0, CList.AbsoluteContentSize.Y + 32)
                 end)
 
-                -- 1. КНОПКА
+                -- 1. КНОПКА (НОВЫЙ ДИЗАЙН И АНИМАЦИЯ)
                 function Section:AddButton(text, callback)
                     local Btn = Instance.new("TextButton")
-                    Btn.Size = UDim2.new(1, 0, 0, 24)
+                    Btn.Size = UDim2.new(1, 0, 0, 25)
                     Btn.BackgroundColor3 = Theme.Element
                     Btn.Text = text
                     Btn.TextColor3 = Theme.Text
                     Btn.Font = Enum.Font.GothamMedium
                     Btn.TextSize = 11
+                    Btn.AutoButtonColor = false
                     Btn.Parent = Container
-                    CreateCorner(Btn, 6)
-                    CreateStroke(Btn, Theme.CardStroke, 1, 0.4)
+                    CreateCorner(Btn, 5)
+                    local btnStroke = CreateStroke(Btn, Theme.CardStroke, 1, 0.5)
+
+                    Btn.MouseEnter:Connect(function()
+                        TweenService:Create(Btn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Card}):Play()
+                        TweenService:Create(btnStroke, TweenInfo.new(0.15), {Color = Theme.Accent, Transparency = 0.3}):Play()
+                    end)
+                    Btn.MouseLeave:Connect(function()
+                        TweenService:Create(Btn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Element}):Play()
+                        TweenService:Create(btnStroke, TweenInfo.new(0.15), {Color = Theme.CardStroke, Transparency = 0.5}):Play()
+                    end)
 
                     Btn.MouseButton1Click:Connect(function()
-                        TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.Accent}):Play()
-                        task.wait(0.1)
-                        TweenService:Create(Btn, TweenInfo.new(0.1), {BackgroundColor3 = Theme.Element}):Play()
+                        TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = Theme.Accent}):Play()
+                        task.wait(0.08)
+                        TweenService:Create(Btn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Card}):Play()
                         if callback then callback() end
                     end)
                 end
 
-                -- 2. ГАЛОЧКА (Toggle)
+                -- 2. ГАЛОЧКА (TOGGLE)
                 function Section:AddToggle(text, default, callback)
                     local active = default or false
 
@@ -326,7 +328,7 @@ function VoltClips:CreateWindow(hubTitle)
                     Box.Text = ""
                     Box.Parent = TFrame
                     CreateCorner(Box, 4)
-                    CreateStroke(Box, Theme.CardStroke, 1, 0.4)
+                    CreateStroke(Box, Theme.CardStroke, 1, 0.5)
 
                     local Label = Instance.new("TextLabel")
                     Label.Size = UDim2.new(1, -24, 1, 0)
@@ -347,12 +349,12 @@ function VoltClips:CreateWindow(hubTitle)
                     end)
                 end
 
-                -- 3. СЛАЙДЕР
+                -- 3. СЛАЙДЕР (НОВЫЙ ДИЗАЙН NEVERLOSE С КРУГЛЫМ ПОЛЗУНКОМ)
                 function Section:AddSlider(text, min, max, default, callback)
                     local val = default or min
 
                     local SFrame = Instance.new("Frame")
-                    SFrame.Size = UDim2.new(1, 0, 0, 30)
+                    SFrame.Size = UDim2.new(1, 0, 0, 32)
                     SFrame.BackgroundTransparency = 1
                     SFrame.Parent = Container
 
@@ -376,18 +378,28 @@ function VoltClips:CreateWindow(hubTitle)
                     ValLbl.TextXAlignment = Enum.TextXAlignment.Right
                     ValLbl.Parent = SFrame
 
+                    -- Трек
                     local Bar = Instance.new("Frame")
                     Bar.Size = UDim2.new(1, 0, 0, 4)
-                    Bar.Position = UDim2.new(0, 0, 0, 18)
+                    Bar.Position = UDim2.new(0, 0, 0, 20)
                     Bar.BackgroundColor3 = Theme.Element
                     Bar.Parent = SFrame
                     CreateCorner(Bar, 2)
 
+                    -- Заполнение
                     local Fill = Instance.new("Frame")
                     Fill.Size = UDim2.new((val - min)/(max - min), 0, 1, 0)
                     Fill.BackgroundColor3 = Theme.Accent
                     Fill.Parent = Bar
                     CreateCorner(Fill, 2)
+
+                    -- Круглая точка на конце полосы
+                    local Knob = Instance.new("Frame")
+                    Knob.Size = UDim2.new(0, 8, 0, 8)
+                    Knob.Position = UDim2.new(1, -4, 0.5, -4)
+                    Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    Knob.Parent = Fill
+                    CreateCorner(Knob, 4)
 
                     local sliding = false
                     local function update(input)
@@ -415,8 +427,8 @@ function VoltClips:CreateWindow(hubTitle)
                     TBoxFrame.Size = UDim2.new(1, 0, 0, 24)
                     TBoxFrame.BackgroundColor3 = Theme.Element
                     TBoxFrame.Parent = Container
-                    CreateCorner(TBoxFrame, 6)
-                    CreateStroke(TBoxFrame, Theme.CardStroke, 1, 0.4)
+                    CreateCorner(TBoxFrame, 5)
+                    CreateStroke(TBoxFrame, Theme.CardStroke, 1, 0.5)
 
                     local Input = Instance.new("TextBox")
                     Input.Size = UDim2.new(1, -10, 1, 0)
@@ -439,7 +451,7 @@ function VoltClips:CreateWindow(hubTitle)
                 return Section
             end
 
-            -- Переключение Подвкладки
+            -- Смена подвкладки
             SubBtn.MouseButton1Click:Connect(function()
                 for _, st in pairs(Tab.SubTabs) do
                     st.Button.TextColor3 = Theme.SubText
@@ -461,18 +473,16 @@ function VoltClips:CreateWindow(hubTitle)
             return SubTab
         end
 
-        -- Переключение Главной Вкладки
+        -- Смена главной вкладки
         TabBtn.MouseButton1Click:Connect(function()
             for _, t in pairs(Tabs) do
                 t.Button.ImageColor3 = Theme.SubText
-                t.Button.BackgroundTransparency = 0.5
                 for _, st in pairs(t.SubTabs) do
                     st.Button.Visible = false
                     st.Page.Visible = false
                 end
             end
             TabBtn.ImageColor3 = Theme.Accent
-            TabBtn.BackgroundTransparency = 0.2
 
             for _, st in pairs(Tab.SubTabs) do
                 st.Button.Visible = true
@@ -486,7 +496,6 @@ function VoltClips:CreateWindow(hubTitle)
         table.insert(Tabs, Tab)
         if #Tabs == 1 then
             TabBtn.ImageColor3 = Theme.Accent
-            TabBtn.BackgroundTransparency = 0.2
         end
 
         return Tab
@@ -530,7 +539,7 @@ function VoltClips:CreateWindow(hubTitle)
                 TweenService:Create(card, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
                     Position = UDim2.new(0, 0, card.Position.Y.Scale, card.Position.Y.Offset),
                     Rotation = 0,
-                    BackgroundTransparency = 0.2
+                    BackgroundTransparency = 0.15
                 }):Play()
             end
 
