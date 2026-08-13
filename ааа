@@ -571,44 +571,5 @@ function VoltClips:CreateWindow(titleText)
     return window
 end
 
--- ================================================================= --
---                     ПРИМЕР ИСПОЛЬЗОВАНИЯ (TEST CODE)             --
--- ================================================================= --
 
-local Window = VoltClips:CreateWindow("VoltClips")
 
--- Создаем Главные Вкладки (Сайдбар слева)
-local Tab1 = Window:AddTab("🎯") -- Visuals / Aim
-local Tab2 = Window:AddTab("⚡") -- Movement
-
--- Создаем Подвкладки (Сверху)
-local MainSubTab = Tab1:AddSubTab("main")
-local CameraSubTab = Tab1:AddSubTab("camera")
-local HudSubTab = Tab1:AddSubTab("hud")
-
--- Добавляем Секцию в Left Column
-local HitLogsSection = MainSubTab:AddSection("hit logs", "left")
-HitLogsSection:AddToggle("Hit logs", true, function(val)
-    print("Hit logs:", val)
-end)
-HitLogsSection:AddToggle("Console logs", false, function(val)
-    print("Console logs:", val)
-end)
-HitLogsSection:AddSlider("Hit Sound Volume", 0, 100, 50, function(val)
-    print("Volume:", val)
-end)
-HitLogsSection:AddTextBox("Custom Sound Name", "Type sound here...", function(txt)
-    print("Sound set to:", txt)
-end)
-
--- Добавляем Секцию в Right Column
-local MovementSection = MainSubTab:AddSection("movement helper", "right")
-MovementSection:AddToggle("Bunnyhop", true, function(val)
-    print("BHop:", val)
-end)
-MovementSection:AddToggle("Auto Strafer", false, function(val)
-    print("Strafer:", val)
-end)
-MovementSection:AddButton("Reset Settings", function()
-    print("Settings reseted!")
-end)
