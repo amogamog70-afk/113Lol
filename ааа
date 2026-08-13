@@ -1,5 +1,5 @@
 -- ================================================================= --
---         VOLTCLIPS UI LIBRARY (STEALTH & ANTI-CHEAT BYPASS)        --
+--         VOLTCLIPS UI LIBRARY (HVH ACCENT & POPUP OPTIONS)         --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -10,7 +10,6 @@ local LogService = game:GetService("LogService")
 local VoltClips = {}
 VoltClips.__index = VoltClips
 
--- Рандомизация имен элементов для защиты от сканеров античита
 local function RandomString(len)
     local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     local length = len or math.random(10, 16)
@@ -22,19 +21,14 @@ local function RandomString(len)
     return table.concat(result)
 end
 
--- Автоматическая очистка логов и памяти каждую 1 минуту
+-- Авто-очистка логов каждые 60 секунд
 task.spawn(function()
     while task.wait(60) do
-        pcall(function()
-            LogService:ClearOutput()
-        end)
-        pcall(function()
-            collectgarbage("collect")
-        end)
+        pcall(function() LogService:ClearOutput() end)
+        pcall(function() collectgarbage("collect") end)
     end
 end)
 
--- Безопасное внедрение GUI в игру
 local function GetSafeContainer()
     if gethui then
         local holder = gethui()
@@ -72,6 +66,11 @@ local BuiltInIcons = {
     ["Movement"] = "rbxassetid://136160678435000"
 }
 
+-- Кастомный цвет фона для вкладки HvH
+local CustomTabAccents = {
+    ["HvH"] = Color3.fromRGB(255, 45, 85) -- Неоново-алый агрессивный цвет
+}
+
 local Theme = {
     Background = Color3.fromRGB(11, 13, 18),
     Sidebar    = Color3.fromRGB(15, 17, 24),
@@ -105,6 +104,11 @@ function VoltClips:CreateWindow(hubTitle)
     
     local ScreenGui = GetSafeContainer()
 
+    -- Контейнер для всплывающих поверх окон
+    local OverlayFolder = Instance.new("Folder")
+    OverlayFolder.Name = RandomString(10)
+    OverlayFolder.Parent = ScreenGui
+
     -- Главное окно
     local Main = Instance.new("Frame")
     Main.Name = RandomString(12)
@@ -118,7 +122,7 @@ function VoltClips:CreateWindow(hubTitle)
     CreateCorner(Main, 10)
     local mainStroke = CreateStroke(Main, Theme.CardStroke, 1, 0.2)
 
-    -- Панель Перетаскивания (ТОЛЬКО ВЕРХНЯЯ ШАПКА)
+    -- Перетаскивание за верхнюю панель
     local DragHeader = Instance.new("Frame")
     DragHeader.Name = RandomString(10)
     DragHeader.Size = UDim2.new(1, 0, 0, 35)
@@ -206,6 +210,13 @@ function VoltClips:CreateWindow(hubTitle)
     local Tabs = {}
     local ShatterPieces = { Sidebar, TopBar, Logo }
 
+    -- Функция Закрытия всех всплывающих доп. GUI
+    local function CloseAllPopups()
+        for _, child in pairs(OverlayFolder:GetChildren()) do
+            child:Destroy()
+        end
+    end
+
     function Window:AddTab(tabName)
         local Tab = { SubTabs = {} }
 
@@ -215,15 +226,32 @@ function VoltClips:CreateWindow(hubTitle)
             imageUri = (#cleanId > 0) and ("rbxassetid://" .. cleanId) or ""
         end
 
+        local isHvH = (tabName == "HvH")
+        local customAccent = CustomTabAccents[tabName]
+
+        -- Контейнер Иконки Вкладки
+        local TabBtnBg = Instance.new("Frame")
+        TabBtnBg.Name = RandomString(8)
+        TabBtnBg.Size = UDim2.new(0, 30, 0, 30)
+        TabBtnBg.BackgroundColor3 = isHvH and customAccent or Theme.Element
+        TabBtnBg.BackgroundTransparency = isHvH and 0.2 or 1
+        TabBtnBg.Parent = TabList
+        CreateCorner(TabBtnBg, 8)
+        
+        if isHvH then
+            CreateStroke(TabBtnBg, customAccent, 1, 0.2)
+        end
+
         local TabBtn = Instance.new("ImageButton")
         TabBtn.Name = RandomString(8)
-        TabBtn.Size = UDim2.new(0, 24, 0, 24)
+        TabBtn.Size = UDim2.new(0, 20, 0, 20)
+        TabBtn.Position = UDim2.new(0.5, -10, 0.5, -10)
         TabBtn.BackgroundTransparency = 1
         TabBtn.Image = imageUri
-        TabBtn.ImageColor3 = Theme.SubText
+        TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.SubText
         TabBtn.ScaleType = Enum.ScaleType.Fit
         TabBtn.AutoButtonColor = false
-        TabBtn.Parent = TabList
+        TabBtn.Parent = TabBtnBg
 
         Tab.Button = TabBtn
 
@@ -369,8 +397,13 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 2. ГАЛОЧКА (TOGGLE)
-                function Section:AddToggle(text, default, callback)
+                -- 2. ГАЛОЧКА (TOGGLE) + КНОПКА 3 ТОЧЕК ДЛЯ ДОП. НАСТРОЕК
+                function Section:AddToggle(text, default, optionsTable, callback)
+                    if type(optionsTable) == "function" then
+                        callback = optionsTable
+                        optionsTable = nil
+                    end
+
                     local active = default or false
 
                     local TFrame = Instance.new("Frame")
@@ -380,7 +413,7 @@ function VoltClips:CreateWindow(hubTitle)
                     TFrame.Parent = Container
 
                     local Label = Instance.new("TextLabel")
-                    Label.Size = UDim2.new(1, -42, 1, 0)
+                    Label.Size = UDim2.new(1, optionsTable and -65 or -42, 1, 0)
                     Label.BackgroundTransparency = 1
                     Label.Text = text
                     Label.TextColor3 = active and Theme.Accent or Theme.SubText
@@ -389,6 +422,7 @@ function VoltClips:CreateWindow(hubTitle)
                     Label.TextXAlignment = Enum.TextXAlignment.Left
                     Label.Parent = TFrame
 
+                    -- Включатель-переключатель
                     local SwitchBg = Instance.new("TextButton")
                     SwitchBg.Size = UDim2.new(0, 32, 0, 16)
                     SwitchBg.Position = UDim2.new(1, -32, 0.5, -8)
@@ -416,10 +450,95 @@ function VoltClips:CreateWindow(hubTitle)
                         if callback then pcall(callback, active) end
                     end)
 
+                    -- ЕСЛИ ЕСТЬ ДОП. НАСТРОЙКИ — СПРАВА ПОЯВЛЯЕТСЯ КНОПКА ТРЕХ ТОЧЕК •••
+                    if optionsTable and type(optionsTable) == "table" and #optionsTable > 0 then
+                        local DotsBtn = Instance.new("TextButton")
+                        DotsBtn.Name = RandomString(6)
+                        DotsBtn.Size = UDim2.new(0, 20, 0, 16)
+                        DotsBtn.Position = UDim2.new(1, -58, 0.5, -8)
+                        DotsBtn.BackgroundColor3 = Theme.Element
+                        DotsBtn.Text = "•••"
+                        DotsBtn.TextColor3 = Theme.SubText
+                        DotsBtn.Font = Enum.Font.GothamBold
+                        DotsBtn.TextSize = 9
+                        DotsBtn.AutoButtonColor = false
+                        DotsBtn.Parent = TFrame
+                        CreateCorner(DotsBtn, 4)
+                        local dotsStroke = CreateStroke(DotsBtn, Theme.CardStroke, 1, 0.5)
+
+                        -- Создание Всплывающего Окна Настроек (Sub-GUI)
+                        DotsBtn.MouseButton1Click:Connect(function()
+                            CloseAllPopups()
+
+                            local Popup = Instance.new("Frame")
+                            Popup.Name = RandomString(10)
+                            Popup.BackgroundColor3 = Theme.Card
+                            Popup.Parent = OverlayFolder
+                            CreateCorner(Popup, 8)
+                            CreateStroke(Popup, Theme.Accent, 1, 0.3)
+
+                            -- Позиция чуть правее кнопки трех точек
+                            local btnAbsPos = DotsBtn.AbsolutePosition
+                            Popup.Position = UDim2.new(0, btnAbsPos.X + 25, 0, btnAbsPos.Y - 5)
+
+                            local PopContainer = Instance.new("Frame")
+                            PopContainer.Size = UDim2.new(1, -16, 1, -16)
+                            PopContainer.Position = UDim2.new(0, 8, 0, 8)
+                            PopContainer.BackgroundTransparency = 1
+                            PopContainer.Parent = Popup
+
+                            local PopList = Instance.new("UIListLayout")
+                            PopList.Padding = UDim.new(0, 6)
+                            PopList.Parent = PopContainer
+
+                            -- Авто-расчет размеров всплывающего окна
+                            PopList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+                                Popup.Size = UDim2.new(0, 160, 0, PopList.AbsoluteContentSize.Y + 16)
+                            end)
+
+                            -- Заполнение опций внутри всплывашки
+                            for _, opt in ipairs(optionsTable) do
+                                if opt.Type == "Toggle" then
+                                    local pActive = opt.Default or false
+                                    local pBtn = Instance.new("TextButton")
+                                    pBtn.Size = UDim2.new(1, 0, 0, 22)
+                                    pBtn.BackgroundColor3 = Theme.Element
+                                    pBtn.Text = opt.Text .. (pActive and " [ON]" or " [OFF]")
+                                    pBtn.TextColor3 = pActive and Theme.Accent or Theme.SubText
+                                    pBtn.Font = Enum.Font.GothamMedium
+                                    pBtn.TextSize = 10
+                                    pBtn.Parent = PopContainer
+                                    CreateCorner(pBtn, 4)
+
+                                    pBtn.MouseButton1Click:Connect(function()
+                                        pActive = not pActive
+                                        pBtn.Text = opt.Text .. (pActive and " [ON]" or " [OFF]")
+                                        pBtn.TextColor3 = pActive and Theme.Accent or Theme.SubText
+                                        if opt.Callback then pcall(opt.Callback, pActive) end
+                                    end)
+                                elseif opt.Type == "Button" then
+                                    local pBtn = Instance.new("TextButton")
+                                    pBtn.Size = UDim2.new(1, 0, 0, 22)
+                                    pBtn.BackgroundColor3 = Theme.Element
+                                    pBtn.Text = opt.Text
+                                    pBtn.TextColor3 = Theme.Text
+                                    pBtn.Font = Enum.Font.GothamMedium
+                                    pBtn.TextSize = 10
+                                    pBtn.Parent = PopContainer
+                                    CreateCorner(pBtn, 4)
+
+                                    pBtn.MouseButton1Click:Connect(function()
+                                        if opt.Callback then pcall(opt.Callback) end
+                                    end)
+                                end
+                            end
+                        end)
+                    end
+
                     UpdateSize()
                 end
 
-                -- 3. СЛАЙДЕР (3 ЕДИНИЦЫ: %, m, ИЛИ БЕЗ НИЧЕГО)
+                -- 3. СЛАЙДЕР
                 function Section:AddSlider(text, min, max, default, unit, callback)
                     if type(unit) == "function" then
                         callback = unit
@@ -565,6 +684,7 @@ function VoltClips:CreateWindow(hubTitle)
             end
 
             SubBtn.MouseButton1Click:Connect(function()
+                CloseAllPopups()
                 for _, st in pairs(Tab.SubTabs) do
                     st.Button.TextColor3 = Theme.SubText
                     st.Button.BackgroundColor3 = Theme.Card
@@ -586,14 +706,22 @@ function VoltClips:CreateWindow(hubTitle)
         end
 
         TabBtn.MouseButton1Click:Connect(function()
+            CloseAllPopups()
             for _, t in pairs(Tabs) do
                 t.Button.ImageColor3 = Theme.SubText
+                if t.Button.Parent and t.Button.Parent:IsA("Frame") and t.Button.Parent.BackgroundColor3 ~= CustomTabAccents["HvH"] then
+                    t.Button.Parent.BackgroundTransparency = 1
+                end
                 for _, st in pairs(t.SubTabs) do
                     st.Button.Visible = false
                     st.Page.Visible = false
                 end
             end
-            TabBtn.ImageColor3 = Theme.Accent
+            TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.Accent
+            if not isHvH then
+                TabBtnBg.BackgroundTransparency = 0.8
+                TabBtnBg.BackgroundColor3 = Theme.Accent
+            end
 
             for _, st in pairs(Tab.SubTabs) do
                 st.Button.Visible = true
@@ -606,7 +734,11 @@ function VoltClips:CreateWindow(hubTitle)
 
         table.insert(Tabs, Tab)
         if #Tabs == 1 then
-            TabBtn.ImageColor3 = Theme.Accent
+            TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.Accent
+            if not isHvH then
+                TabBtnBg.BackgroundTransparency = 0.8
+                TabBtnBg.BackgroundColor3 = Theme.Accent
+            end
         end
 
         return Tab
@@ -620,6 +752,8 @@ function VoltClips:CreateWindow(hubTitle)
     local function ToggleMenu()
         if animating then return end
         animating = true
+
+        CloseAllPopups()
 
         if isOpen then
             for _, piece in pairs(ShatterPieces) do
