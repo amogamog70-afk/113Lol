@@ -1,13 +1,68 @@
 -- ================================================================= --
---            VOLTCLIPS UI LIBRARY (PERFECTED NEVERLOSE)             --
+--         VOLTCLIPS UI LIBRARY (STEALTH & ANTI-CHEAT BYPASS)        --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
+local LogService = game:GetService("LogService")
 
 local VoltClips = {}
 VoltClips.__index = VoltClips
+
+-- Рандомизация имен элементов для защиты от сканеров античита
+local function RandomString(len)
+    local chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local length = len or math.random(10, 16)
+    local result = {}
+    for i = 1, length do
+        local randIndex = math.random(1, #chars)
+        result[i] = string.sub(chars, randIndex, randIndex)
+    end
+    return table.concat(result)
+end
+
+-- Автоматическая очистка логов и памяти каждую 1 минуту
+task.spawn(function()
+    while task.wait(60) do
+        pcall(function()
+            LogService:ClearOutput()
+        end)
+        pcall(function()
+            collectgarbage("collect")
+        end)
+    end
+end)
+
+-- Безопасное внедрение GUI в игру
+local function GetSafeContainer()
+    if gethui then
+        local holder = gethui()
+        local sg = Instance.new("ScreenGui")
+        sg.Name = RandomString(14)
+        sg.ResetOnSpawn = false
+        sg.Parent = holder
+        return sg
+    end
+
+    local sg = Instance.new("ScreenGui")
+    sg.Name = RandomString(14)
+    sg.ResetOnSpawn = false
+
+    if syn and syn.protect_gui then
+        pcall(function() syn.protect_gui(sg) end)
+        pcall(function() sg.Parent = CoreGui end)
+    elseif protectgui then
+        pcall(function() protectgui(sg) end)
+        pcall(function() sg.Parent = CoreGui end)
+    else
+        local success = pcall(function() sg.Parent = CoreGui end)
+        if not success or not sg.Parent then
+            sg.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+        end
+    end
+    return sg
+end
 
 local BuiltInIcons = {
     ["Legit"]    = "rbxassetid://118624373632520",
@@ -48,18 +103,11 @@ end
 function VoltClips:CreateWindow(hubTitle)
     local Window = {}
     
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "VoltClips_Framework"
-    ScreenGui.ResetOnSpawn = false
-    
-    pcall(function() ScreenGui.Parent = CoreGui end)
-    if not ScreenGui.Parent then
-        ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-    end
+    local ScreenGui = GetSafeContainer()
 
     -- Главное окно
     local Main = Instance.new("Frame")
-    Main.Name = "MainFrame"
+    Main.Name = RandomString(12)
     Main.Size = UDim2.new(0, 620, 0, 390)
     Main.Position = UDim2.new(0.5, -310, 0.5, -195)
     Main.BackgroundColor3 = Theme.Background
@@ -68,11 +116,11 @@ function VoltClips:CreateWindow(hubTitle)
     Main.Parent = ScreenGui
 
     CreateCorner(Main, 10)
-    CreateStroke(Main, Theme.CardStroke, 1, 0.2)
+    local mainStroke = CreateStroke(Main, Theme.CardStroke, 1, 0.2)
 
-    -- Зона Перетаскивания (ТОЛЬКО ВЕРХНЯЯ ШАПКА MENU)
+    -- Панель Перетаскивания (ТОЛЬКО ВЕРХНЯЯ ШАПКА)
     local DragHeader = Instance.new("Frame")
-    DragHeader.Name = "DragHeader"
+    DragHeader.Name = RandomString(10)
     DragHeader.Size = UDim2.new(1, 0, 0, 35)
     DragHeader.BackgroundTransparency = 1
     DragHeader.Parent = Main
@@ -97,7 +145,7 @@ function VoltClips:CreateWindow(hubTitle)
 
     -- Левый Сайдбар
     local Sidebar = Instance.new("Frame")
-    Sidebar.Name = "Sidebar"
+    Sidebar.Name = RandomString(10)
     Sidebar.Size = UDim2.new(0, 50, 1, 0)
     Sidebar.BackgroundColor3 = Theme.Sidebar
     Sidebar.BorderSizePixel = 0
@@ -106,6 +154,7 @@ function VoltClips:CreateWindow(hubTitle)
 
     -- Логотип VC
     local Logo = Instance.new("TextLabel")
+    Logo.Name = RandomString(8)
     Logo.Size = UDim2.new(1, 0, 0, 38)
     Logo.BackgroundTransparency = 1
     Logo.Text = "VC"
@@ -115,6 +164,7 @@ function VoltClips:CreateWindow(hubTitle)
     Logo.Parent = Sidebar
 
     local TabList = Instance.new("Frame")
+    TabList.Name = RandomString(8)
     TabList.Size = UDim2.new(1, 0, 1, -45)
     TabList.Position = UDim2.new(0, 0, 0, 42)
     TabList.BackgroundTransparency = 1
@@ -127,13 +177,14 @@ function VoltClips:CreateWindow(hubTitle)
 
     -- Верхняя панель подвкладок
     local TopBar = Instance.new("Frame")
-    TopBar.Name = "TopBar"
+    TopBar.Name = RandomString(10)
     TopBar.Size = UDim2.new(1, -58, 0, 35)
     TopBar.Position = UDim2.new(0, 58, 0, 2)
     TopBar.BackgroundTransparency = 1
     TopBar.Parent = Main
 
     local SubTabContainer = Instance.new("Frame")
+    SubTabContainer.Name = RandomString(8)
     SubTabContainer.Size = UDim2.new(1, 0, 1, 0)
     SubTabContainer.BackgroundTransparency = 1
     SubTabContainer.Parent = TopBar
@@ -146,14 +197,14 @@ function VoltClips:CreateWindow(hubTitle)
 
     -- Рабочая зона
     local ContentContainer = Instance.new("Frame")
-    ContentContainer.Name = "ContentContainer"
+    ContentContainer.Name = RandomString(10)
     ContentContainer.Size = UDim2.new(1, -64, 1, -45)
     ContentContainer.Position = UDim2.new(0, 58, 0, 40)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = Main
 
     local Tabs = {}
-    local PiecesToBreak = {}
+    local ShatterPieces = { Sidebar, TopBar, Logo }
 
     function Window:AddTab(tabName)
         local Tab = { SubTabs = {} }
@@ -165,6 +216,7 @@ function VoltClips:CreateWindow(hubTitle)
         end
 
         local TabBtn = Instance.new("ImageButton")
+        TabBtn.Name = RandomString(8)
         TabBtn.Size = UDim2.new(0, 24, 0, 24)
         TabBtn.BackgroundTransparency = 1
         TabBtn.Image = imageUri
@@ -179,6 +231,7 @@ function VoltClips:CreateWindow(hubTitle)
             local SubTab = {}
 
             local SubBtn = Instance.new("TextButton")
+            SubBtn.Name = RandomString(8)
             SubBtn.Size = UDim2.new(0, 68, 0, 22)
             SubBtn.BackgroundColor3 = Theme.Card
             SubBtn.BackgroundTransparency = 0.4
@@ -191,13 +244,14 @@ function VoltClips:CreateWindow(hubTitle)
             CreateCorner(SubBtn, 5)
 
             local Page = Instance.new("Frame")
+            Page.Name = RandomString(8)
             Page.Size = UDim2.new(1, -5, 1, 0)
             Page.BackgroundTransparency = 1
             Page.Visible = false
             Page.Parent = ContentContainer
 
-            -- Скролл-колонки с идеально выверенным спавном
             local LeftCol = Instance.new("ScrollingFrame")
+            LeftCol.Name = RandomString(8)
             LeftCol.Size = UDim2.new(0.49, -2, 1, 0)
             LeftCol.BackgroundTransparency = 1
             LeftCol.ScrollBarThickness = 2
@@ -209,6 +263,7 @@ function VoltClips:CreateWindow(hubTitle)
             LeftCol.Parent = Page
 
             local RightCol = Instance.new("ScrollingFrame")
+            RightCol.Name = RandomString(8)
             RightCol.Size = UDim2.new(0.49, -2, 1, 0)
             RightCol.Position = UDim2.new(0.51, 0, 0, 0)
             RightCol.BackgroundTransparency = 1
@@ -244,7 +299,7 @@ function VoltClips:CreateWindow(hubTitle)
                 local TargetCol = (side == "right") and RightCol or LeftCol
 
                 local Card = Instance.new("Frame")
-                Card.Name = "CardSection"
+                Card.Name = RandomString(10)
                 Card.Size = UDim2.new(1, 0, 0, 36)
                 Card.BackgroundColor3 = Theme.Card
                 Card.BackgroundTransparency = 0.15
@@ -252,7 +307,7 @@ function VoltClips:CreateWindow(hubTitle)
                 CreateCorner(Card, 8)
                 CreateStroke(Card, Theme.CardStroke, 1, 0.4)
 
-                table.insert(PiecesToBreak, Card)
+                table.insert(ShatterPieces, Card)
 
                 local TitleLabel = Instance.new("TextLabel")
                 TitleLabel.Size = UDim2.new(1, -16, 0, 22)
@@ -283,6 +338,7 @@ function VoltClips:CreateWindow(hubTitle)
                 -- 1. КНОПКА
                 function Section:AddButton(text, callback)
                     local Btn = Instance.new("TextButton")
+                    Btn.Name = RandomString(8)
                     Btn.Size = UDim2.new(1, 0, 0, 26)
                     Btn.BackgroundColor3 = Theme.Element
                     Btn.Text = text
@@ -307,7 +363,7 @@ function VoltClips:CreateWindow(hubTitle)
                         TweenService:Create(Btn, TweenInfo.new(0.08), {BackgroundColor3 = Theme.Accent}):Play()
                         task.wait(0.08)
                         TweenService:Create(Btn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Card}):Play()
-                        if callback then callback() end
+                        if callback then pcall(callback) end
                     end)
                     
                     UpdateSize()
@@ -318,6 +374,7 @@ function VoltClips:CreateWindow(hubTitle)
                     local active = default or false
 
                     local TFrame = Instance.new("Frame")
+                    TFrame.Name = RandomString(8)
                     TFrame.Size = UDim2.new(1, 0, 0, 22)
                     TFrame.BackgroundTransparency = 1
                     TFrame.Parent = Container
@@ -356,7 +413,7 @@ function VoltClips:CreateWindow(hubTitle)
                         TweenService:Create(Knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                             Position = active and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
                         }):Play()
-                        if callback then callback(active) end
+                        if callback then pcall(callback, active) end
                     end)
 
                     UpdateSize()
@@ -373,6 +430,7 @@ function VoltClips:CreateWindow(hubTitle)
                     local val = default or min
 
                     local SFrame = Instance.new("Frame")
+                    SFrame.Name = RandomString(8)
                     SFrame.Size = UDim2.new(1, 0, 0, 26)
                     SFrame.BackgroundTransparency = 1
                     SFrame.Parent = Container
@@ -435,7 +493,7 @@ function VoltClips:CreateWindow(hubTitle)
                         ValueInput.Text = tostring(val) .. unit
                         local pos = (val - min) / (max - min)
                         TweenService:Create(Fill, TweenInfo.new(0.08), {Size = UDim2.new(pos, 0, 1, 0)}):Play()
-                        if callback then callback(val) end
+                        if callback then pcall(callback, val) end
                     end
 
                     ValueInput.FocusLost:Connect(function()
@@ -472,6 +530,7 @@ function VoltClips:CreateWindow(hubTitle)
                 -- 4. ТЕКСТБОКС
                 function Section:AddTextBox(text, placeholder, callback)
                     local TBoxFrame = Instance.new("Frame")
+                    TBoxFrame.Name = RandomString(8)
                     TBoxFrame.Size = UDim2.new(1, 0, 0, 24)
                     TBoxFrame.BackgroundColor3 = Theme.Element
                     TBoxFrame.Parent = Container
@@ -496,7 +555,7 @@ function VoltClips:CreateWindow(hubTitle)
                     end)
                     Input.FocusLost:Connect(function()
                         TweenService:Create(boxStroke, TweenInfo.new(0.15), {Color = Theme.CardStroke, Transparency = 0.5}):Play()
-                        if callback then callback(Input.Text) end
+                        if callback then pcall(callback, Input.Text) end
                     end)
 
                     UpdateSize()
@@ -556,26 +615,34 @@ function VoltClips:CreateWindow(hubTitle)
     -- Анимация Разрушения на Right Shift
     local isOpen = true
     local animating = false
+    local OriginalPositions = {}
 
     local function ToggleMenu()
         if animating then return end
         animating = true
 
         if isOpen then
-            for _, card in pairs(PiecesToBreak) do
-                local rx = math.random(-250, 250)
-                local ry = math.random(-250, 250)
-                local rRot = math.random(-60, 60)
+            for _, piece in pairs(ShatterPieces) do
+                if not OriginalPositions[piece] then
+                    OriginalPositions[piece] = piece.Position
+                end
 
-                TweenService:Create(card, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
-                    Position = card.Position + UDim2.new(0, rx, 0, ry),
-                    Rotation = rRot,
-                    BackgroundTransparency = 1
+                local offsetX = math.random(-350, 350)
+                local offsetY = math.random(-350, 350)
+                local rot = math.random(-120, 120)
+
+                TweenService:Create(piece, TweenInfo.new(0.35, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+                    Position = piece.Position + UDim2.new(0, offsetX, 0, offsetY),
+                    Rotation = rot,
+                    Size = UDim2.new(piece.Size.X.Scale, piece.Size.X.Offset, 0, 0)
                 }):Play()
             end
 
             TweenService:Create(Main, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 BackgroundTransparency = 1
+            }):Play()
+            TweenService:Create(mainStroke, TweenInfo.new(0.35, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = 1
             }):Play()
 
             task.wait(0.35)
@@ -586,12 +653,17 @@ function VoltClips:CreateWindow(hubTitle)
             TweenService:Create(Main, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                 BackgroundTransparency = 0
             }):Play()
+            TweenService:Create(mainStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                Transparency = 0.2
+            }):Play()
 
-            for _, card in pairs(PiecesToBreak) do
-                TweenService:Create(card, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-                    Position = UDim2.new(0, 0, card.Position.Y.Scale, card.Position.Y.Offset),
+            for _, piece in pairs(ShatterPieces) do
+                local origPos = OriginalPositions[piece] or piece.Position
+
+                TweenService:Create(piece, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+                    Position = origPos,
                     Rotation = 0,
-                    BackgroundTransparency = 0.15
+                    Size = UDim2.new(piece.Size.X.Scale, piece.Size.X.Offset, piece.Size.Y.Scale, piece.Size.Y.Offset)
                 }):Play()
             end
 
@@ -602,9 +674,12 @@ function VoltClips:CreateWindow(hubTitle)
         animating = false
     end
 
-    UserInputService.InputBegan:Connect(function(input, gpe)
-        if not gpe and input.KeyCode == Enum.KeyCode.RightShift then
-            ToggleMenu()
+    UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.RightShift then
+            local focusedBox = UserInputService:GetFocusedTextBox()
+            if not focusedBox then
+                ToggleMenu()
+            end
         end
     end)
 
