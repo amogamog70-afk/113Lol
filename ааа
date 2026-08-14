@@ -363,17 +363,19 @@ function VoltClips:CreateWindow(hubTitle)
         end
     end
 
-    function Window:AddTab(tabName)
+    function Window:AddTab(tabName, customIcon)
         local Tab = {
             SubTabs = {},
             ActiveSubTab = nil,
             Sections = {}
         }
 
-        local imageUri = BuiltInIcons[tabName]
-        if not imageUri then
+        local imageUri = customIcon or BuiltInIcons[tabName]
+        if not imageUri or imageUri == "" then
             local cleanId = tostring(tabName):gsub("%D", "")
             imageUri = (#cleanId > 0) and ("rbxassetid://" .. cleanId) or ""
+        elseif not imageUri:find("://") and tonumber(imageUri) then
+            imageUri = "rbxassetid://" .. tostring(imageUri)
         end
 
         local TabBtn = Instance.new("TextButton")
