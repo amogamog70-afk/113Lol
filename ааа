@@ -1,5 +1,5 @@
 -- ================================================================= --
---               VOLTCLIPS GUI LIBRARY (CYBER-AZURE SIGNATURE)       --
+--               VOLTCLIPS GUI LIBRARY (NEVERLOOSE V3 SIGNATURE)     --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -68,22 +68,22 @@ local BuiltInIcons = {
     ["Movement"] = "rbxassetid://136160678435000"
 }
 
--- Уникальная премиальная палитра "Cyber-Azure Glass"
+-- Истинная премиальная палитра Neverlose v3 (Глубокий графит и сапфировый неон)
 local Theme = {
-    Background   = Color3.fromRGB(8, 10, 15),
-    Sidebar      = Color3.fromRGB(11, 14, 20),
-    Card         = Color3.fromRGB(14, 17, 26),
-    CardHeader   = Color3.fromRGB(17, 21, 32),
-    CardStroke   = Color3.fromRGB(26, 33, 48),
-    Element      = Color3.fromRGB(18, 22, 33),
-    ElementHover = Color3.fromRGB(24, 30, 46),
-    TrackBg      = Color3.fromRGB(10, 13, 20),
-    Accent       = Color3.fromRGB(0, 210, 255),
-    AccentDark   = Color3.fromRGB(0, 150, 220),
-    AccentGlow   = Color3.fromRGB(90, 225, 255),
-    Text         = Color3.fromRGB(245, 248, 255),
-    SubText      = Color3.fromRGB(135, 148, 172),
-    Divider      = Color3.fromRGB(22, 28, 42)
+    Background   = Color3.fromRGB(11, 13, 19),
+    Sidebar      = Color3.fromRGB(14, 17, 24),
+    Card         = Color3.fromRGB(16, 20, 29),
+    CardHeader   = Color3.fromRGB(19, 24, 36),
+    CardStroke   = Color3.fromRGB(30, 38, 55),
+    Element      = Color3.fromRGB(21, 26, 38),
+    ElementHover = Color3.fromRGB(28, 35, 52),
+    TrackBg      = Color3.fromRGB(13, 16, 24),
+    Accent       = Color3.fromRGB(0, 168, 255),
+    AccentDark   = Color3.fromRGB(0, 130, 215),
+    AccentGlow   = Color3.fromRGB(60, 195, 255),
+    Text         = Color3.fromRGB(240, 245, 255),
+    SubText      = Color3.fromRGB(130, 144, 168),
+    Divider      = Color3.fromRGB(25, 32, 48)
 }
 
 local function CreateCorner(parent, radius)
@@ -119,7 +119,7 @@ function VoltClips:CreateWindow(hubTitle)
     OverlayFolder.Name = RandomString(10)
     OverlayFolder.Parent = ScreenGui
 
-    -- Главное окно в стиле Cyber-Glass
+    -- Главное окно в эталонном стиле Neverlose v3
     local Main
     local isCanvasSupported = pcall(function()
         Main = Instance.new("CanvasGroup")
@@ -129,15 +129,24 @@ function VoltClips:CreateWindow(hubTitle)
     end
 
     Main.Name = RandomString(12)
-    Main.Size = UDim2.new(0, 655, 0, 425)
-    Main.Position = UDim2.new(0.5, -327, 0.5, -212)
+    Main.Size = UDim2.new(0, 650, 0, 420)
+    Main.Position = UDim2.new(0.5, -325, 0.5, -210)
     Main.BackgroundColor3 = Theme.Background
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = true
     Main.Parent = ScreenGui
 
     CreateCorner(Main, 8)
-    local mainStroke = CreateStroke(Main, Theme.CardStroke, 1, 0.3)
+    local mainStroke = CreateStroke(Main, Theme.CardStroke, 1, 0.35)
+
+    -- Верхняя акцентная линия Neverlose Glow
+    local TopAccentLine = Instance.new("Frame")
+    TopAccentLine.Name = "TopAccentGlow"
+    TopAccentLine.Size = UDim2.new(1, 0, 0, 2)
+    TopAccentLine.Position = UDim2.new(0, 0, 0, 0)
+    TopAccentLine.BackgroundColor3 = Theme.Accent
+    TopAccentLine.BorderSizePixel = 0
+    TopAccentLine.Parent = Main
 
     local MainScale = Instance.new("UIScale")
     MainScale.Scale = 1
@@ -171,7 +180,7 @@ function VoltClips:CreateWindow(hubTitle)
     -- Левый Сайдбар
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomString(10)
-    Sidebar.Size = UDim2.new(0, 142, 1, 0)
+    Sidebar.Size = UDim2.new(0, 140, 1, 0)
     Sidebar.BackgroundColor3 = Theme.Sidebar
     Sidebar.BorderSizePixel = 0
     Sidebar.Parent = Main
@@ -185,7 +194,7 @@ function VoltClips:CreateWindow(hubTitle)
     SideBorder.BorderSizePixel = 0
     SideBorder.Parent = Sidebar
 
-    -- Стильная Шапка Сайдбара (Двухцветный бренд)
+    -- Шапка Сайдбара
     local LogoContainer = Instance.new("Frame")
     LogoContainer.Name = "LogoHeader"
     LogoContainer.Size = UDim2.new(1, 0, 0, 46)
@@ -198,7 +207,7 @@ function VoltClips:CreateWindow(hubTitle)
     LogoBadge.BackgroundColor3 = Theme.Element
     LogoBadge.Parent = LogoContainer
     CreateCorner(LogoBadge, 6)
-    CreateStroke(LogoBadge, Theme.Accent, 1, 0.5)
+    CreateStroke(LogoBadge, Theme.Accent, 1, 0.4)
 
     local LogoBadgeText = Instance.new("TextLabel")
     LogoBadgeText.Size = UDim2.new(1, 0, 1, 0)
@@ -210,11 +219,11 @@ function VoltClips:CreateWindow(hubTitle)
     LogoBadgeText.Parent = LogoBadge
 
     local LogoTitle = Instance.new("TextLabel")
-    LogoTitle.Size = UDim2.new(1, -48, 1, 0)
+    LogoTitle.Size = UDim2.new(1, -46, 1, 0)
     LogoTitle.Position = UDim2.new(0, 44, 0, 0)
     LogoTitle.BackgroundTransparency = 1
     LogoTitle.RichText = true
-    LogoTitle.Text = '<font color="#FFFFFF">Volt</font><font color="#00D2FF">Clips</font>'
+    LogoTitle.Text = '<font color="#FFFFFF">Volt</font><font color="#00A8FF">Clips</font>'
     LogoTitle.TextSize = 14
     LogoTitle.Font = Enum.Font.GothamBlack
     LogoTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -252,7 +261,7 @@ function VoltClips:CreateWindow(hubTitle)
     AvatarImage.Image = "rbxthumb://type=AvatarHeadShot&id=" .. tostring(LocalPlayer and LocalPlayer.UserId or 1) .. "&w=150&h=150"
     AvatarImage.Parent = ProfileCard
     CreateCorner(AvatarImage, 15)
-    CreateStroke(AvatarImage, Theme.Accent, 1, 0.6)
+    CreateStroke(AvatarImage, Theme.Accent, 1, 0.5)
 
     if LocalPlayer then
         task.spawn(function()
@@ -292,8 +301,8 @@ function VoltClips:CreateWindow(hubTitle)
     -- Верхняя панель подвкладок
     local TopBar = Instance.new("Frame")
     TopBar.Name = RandomString(10)
-    TopBar.Size = UDim2.new(1, -152, 0, 36)
-    TopBar.Position = UDim2.new(0, 148, 0, 4)
+    TopBar.Size = UDim2.new(1, -150, 0, 36)
+    TopBar.Position = UDim2.new(0, 146, 0, 4)
     TopBar.BackgroundTransparency = 1
     TopBar.Parent = Main
 
@@ -312,8 +321,8 @@ function VoltClips:CreateWindow(hubTitle)
     -- Контейнер контента
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = RandomString(10)
-    ContentContainer.Size = UDim2.new(1, -152, 1, -46)
-    ContentContainer.Position = UDim2.new(0, 148, 0, 40)
+    ContentContainer.Size = UDim2.new(1, -150, 1, -46)
+    ContentContainer.Position = UDim2.new(0, 146, 0, 40)
     ContentContainer.BackgroundTransparency = 1
     ContentContainer.Parent = Main
 
@@ -578,7 +587,7 @@ function VoltClips:CreateWindow(hubTitle)
                 CreateCorner(Card, 7)
                 CreateStroke(Card, Theme.CardStroke, 1, 0.45)
 
-                -- Шапка секции
+                -- Шапка секции Neverlose v3
                 local HeaderFrame = Instance.new("Frame")
                 HeaderFrame.Size = UDim2.new(1, 0, 0, 24)
                 HeaderFrame.BackgroundTransparency = 1
@@ -625,7 +634,7 @@ function VoltClips:CreateWindow(hubTitle)
                 end
                 CList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateSize)
 
-                -- 1. КНОПКА
+                -- 1. КНОПКА (СТИЛЬ NEVERLOOSE V3)
                 function Section:AddButton(text, callback)
                     local Btn = Instance.new("TextButton")
                     Btn.Name = RandomString(8)
@@ -760,7 +769,6 @@ function VoltClips:CreateWindow(hubTitle)
                             ClickCatcher.ZIndex = 900
                             ClickCatcher.Parent = ScreenGui
 
-                            -- Элегантное окно под-настроек
                             local Popup = Instance.new("Frame")
                             Popup.Name = RandomString(10)
                             Popup.BackgroundColor3 = Theme.Card
@@ -853,7 +861,7 @@ function VoltClips:CreateWindow(hubTitle)
                                 end
                             end)
 
-                            -- Контейнер опций с авто-высотой (без скроллбаров)
+                            -- Контейнер опций с авто-высотой
                             local PopContainer = Instance.new("Frame")
                             PopContainer.Size = UDim2.new(1, -16, 0, 0)
                             PopContainer.Position = UDim2.new(0, 8, 0, 30)
@@ -968,7 +976,7 @@ function VoltClips:CreateWindow(hubTitle)
                                     CreateCorner(sValBox, 3)
                                     CreateStroke(sValBox, Theme.CardStroke, 1, 0.5)
 
-                                    -- Трек слайдера с безопасными отступами
+                                    -- Трек слайдера с отступами
                                     local sBar = Instance.new("Frame")
                                     sBar.Size = UDim2.new(1, -12, 0, 5)
                                     sBar.Position = UDim2.new(0, 6, 0, 20)
@@ -1010,7 +1018,7 @@ function VoltClips:CreateWindow(hubTitle)
                                     sBar.InputBegan:Connect(function(input)
                                         if input.UserInputType == Enum.UserInputType.MouseButton1 then
                                             sSliding = true
-                                            local p = math.clamp((input.Position.X - sBar.AbsolutePosition.X) / sBar.AbsoluteSize.X, 0, 1)
+                                            local p = math.clamp((input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
                                             setSliderVal(sMin + (sMax - sMin) * p)
                                         end
                                     end)
@@ -1019,7 +1027,7 @@ function VoltClips:CreateWindow(hubTitle)
                                     end)
                                     UserInputService.InputChanged:Connect(function(input)
                                         if sSliding and input.UserInputType == Enum.UserInputType.MouseMovement then
-                                            local p = math.clamp((input.Position.X - sBar.AbsolutePosition.X) / sBar.AbsoluteSize.X, 0, 1)
+                                            local p = math.clamp((input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
                                             setSliderVal(sMin + (sMax - sMin) * p)
                                         end
                                     end)
