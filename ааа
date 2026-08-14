@@ -1,5 +1,5 @@
 -- ================================================================= --
---               VOLTCLIPS GUI LIBRARY (HVH & SHATTER FX)            --
+--               VOLTCLIPS GUI LIBRARY (NEVERLOOSE AUTHENTIC)        --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -76,7 +76,6 @@ local Theme = {
     Element    = Color3.fromRGB(22, 26, 36),
     Accent     = Color3.fromRGB(75, 215, 255),
     AccentGlow = Color3.fromRGB(120, 235, 255),
-    Crystal    = Color3.fromRGB(16, 26, 42),
     Text       = Color3.fromRGB(242, 246, 252),
     SubText    = Color3.fromRGB(130, 142, 162)
 }
@@ -99,7 +98,6 @@ local function CreateStroke(parent, color, thickness, transparency)
 end
 
 function VoltClips:CreateWindow(hubTitle)
-    -- Убираем приписку Premium, оставляем чистое название
     local titleText = hubTitle or "VoltClips"
     titleText = titleText:gsub("%s*Premium%s*", "")
     if #titleText == 0 then titleText = "VoltClips" end
@@ -111,15 +109,11 @@ function VoltClips:CreateWindow(hubTitle)
     
     local ScreenGui = GetSafeContainer()
 
-    local FXLayer = Instance.new("Folder")
-    FXLayer.Name = RandomString(10)
-    FXLayer.Parent = ScreenGui
-
     local OverlayFolder = Instance.new("Folder")
     OverlayFolder.Name = RandomString(10)
     OverlayFolder.Parent = ScreenGui
 
-    -- Главное окно (Увеличенный размер для отличной читаемости)
+    -- Главное окно
     local Main = Instance.new("Frame")
     Main.Name = RandomString(12)
     Main.Size = UDim2.new(0, 725, 0, 460)
@@ -131,6 +125,11 @@ function VoltClips:CreateWindow(hubTitle)
 
     CreateCorner(Main, 8)
     local mainStroke = CreateStroke(Main, Theme.CardStroke, 1.2, 0.2)
+
+    -- Масштабирование для плавной Neverlose-анимации
+    local MainScale = Instance.new("UIScale")
+    MainScale.Scale = 1
+    MainScale.Parent = Main
 
     -- Перетаскивание окна за шапку
     local DragHeader = Instance.new("Frame")
@@ -157,7 +156,7 @@ function VoltClips:CreateWindow(hubTitle)
         end
     end)
 
-    -- Левый Сайдбар (Комфортная ширина 150px)
+    -- Левый Сайдбар (Ширина 150px)
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomString(10)
     Sidebar.Size = UDim2.new(0, 150, 1, 0)
@@ -166,7 +165,7 @@ function VoltClips:CreateWindow(hubTitle)
     Sidebar.Parent = Main
     CreateCorner(Sidebar, 8)
 
-    -- Шапка Сайдбара (Логотип и Название без Premium)
+    -- Шапка Сайдбара
     local LogoContainer = Instance.new("Frame")
     LogoContainer.Name = "LogoHeader"
     LogoContainer.Size = UDim2.new(1, 0, 0, 48)
@@ -209,7 +208,7 @@ function VoltClips:CreateWindow(hubTitle)
     TabListLayout.Padding = UDim.new(0, 4)
     TabListLayout.Parent = TabList
 
-    -- Карточка профиля игрока внизу сайдбара (Четкая и крупная)
+    -- Карточка профиля игрока внизу сайдбара
     local ProfileCard = Instance.new("Frame")
     ProfileCard.Name = "UserProfileCard"
     ProfileCard.Size = UDim2.new(1, -16, 0, 50)
@@ -285,7 +284,7 @@ function VoltClips:CreateWindow(hubTitle)
     SubTabLayout.Padding = UDim.new(0, 6)
     SubTabLayout.Parent = SubTabContainer
 
-    -- Рабочая зона контента
+    -- Контейнер контента
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = RandomString(10)
     ContentContainer.Size = UDim2.new(1, -162, 1, -48)
@@ -397,7 +396,6 @@ function VoltClips:CreateWindow(hubTitle)
         Indicator.Parent = TabBtn
         CreateCorner(Indicator, 2)
 
-        -- Крупная и четкая иконка (20x20px)
         local TabIcon = Instance.new("ImageLabel")
         TabIcon.Name = "Icon"
         TabIcon.Size = UDim2.new(0, 20, 0, 20)
@@ -408,7 +406,6 @@ function VoltClips:CreateWindow(hubTitle)
         TabIcon.ScaleType = Enum.ScaleType.Fit
         TabIcon.Parent = TabBtn
 
-        -- Крупный и легко читаемый текст (12px GothamBold)
         local TabTitle = Instance.new("TextLabel")
         TabTitle.Name = "Title"
         TabTitle.Size = UDim2.new(1, -38, 1, 0)
@@ -578,7 +575,7 @@ function VoltClips:CreateWindow(hubTitle)
                 end
                 CList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateSize)
 
-                -- 1. КНОПКА (УДОБНАЯ И КРУПНАЯ)
+                -- 1. КНОПКА
                 function Section:AddButton(text, callback)
                     local Btn = Instance.new("TextButton")
                     Btn.Name = RandomString(8)
@@ -612,7 +609,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (ВОЗВРАЩЕН ПЛАВНЫЙ СТИЛЬНЫЙ СВИТЧ-ДИЗАЙН + КРУПНЫЙ ТЕКСТ)
+                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (СВИТЧ С ПОДДЕРЖКОЙ СОХРАНЕНИЯ СОСТОЯНИЯ В ПОД-МЕНЮ)
                 function Section:AddToggle(text, default, optionsTable, callback)
                     if type(optionsTable) == "function" then
                         callback = optionsTable
@@ -624,12 +621,14 @@ function VoltClips:CreateWindow(hubTitle)
                     local TFrame = Instance.new("Frame")
                     TFrame.Name = RandomString(8)
                     TFrame.Size = UDim2.new(1, 0, 0, 24)
+                    TFrame.BackgroundColor3 = Theme.Element
                     TFrame.BackgroundTransparency = 1
                     TFrame.Parent = Container
+                    CreateCorner(TFrame, 4)
 
                     local Label = Instance.new("TextLabel")
-                    Label.Size = UDim2.new(1, optionsTable and -64 or -42, 1, 0)
-                    Label.Position = UDim2.new(0, 0, 0, 0)
+                    Label.Size = UDim2.new(1, optionsTable and -62 or -40, 1, 0)
+                    Label.Position = UDim2.new(0, 4, 0, 0)
                     Label.BackgroundTransparency = 1
                     Label.Text = text
                     Label.TextColor3 = active and Theme.Text or Theme.SubText
@@ -639,16 +638,16 @@ function VoltClips:CreateWindow(hubTitle)
                     Label.TextTruncate = Enum.TextTruncate.AtEnd
                     Label.Parent = TFrame
 
-                    -- Плавный переключатель (Switch Pill)
+                    -- Плавный переключатель
                     local SwitchBg = Instance.new("TextButton")
-                    SwitchBg.Size = UDim2.new(0, 32, 0, 16)
+                    SwitchBg.Size = UDim2.new(0, 30, 0, 16)
                     SwitchBg.Position = UDim2.new(1, -32, 0.5, -8)
                     SwitchBg.BackgroundColor3 = active and Theme.Accent or Theme.Element
                     SwitchBg.Text = ""
                     SwitchBg.AutoButtonColor = false
                     SwitchBg.Parent = TFrame
                     CreateCorner(SwitchBg, 8)
-                    local switchStroke = CreateStroke(SwitchBg, Theme.CardStroke, 1, 0.4)
+                    CreateStroke(SwitchBg, Theme.CardStroke, 1, 0.4)
 
                     local Knob = Instance.new("Frame")
                     Knob.Size = UDim2.new(0, 12, 0, 12)
@@ -657,22 +656,34 @@ function VoltClips:CreateWindow(hubTitle)
                     Knob.Parent = SwitchBg
                     CreateCorner(Knob, 6)
 
-                    SwitchBg.MouseButton1Click:Connect(function()
-                        active = not active
+                    local function setToggle(state)
+                        active = state
                         TweenService:Create(SwitchBg, TweenInfo.new(0.18), {BackgroundColor3 = active and Theme.Accent or Theme.Element}):Play()
                         TweenService:Create(Label, TweenInfo.new(0.18), {TextColor3 = active and Theme.Text or Theme.SubText}):Play()
                         TweenService:Create(Knob, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                             Position = active and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
                         }):Play()
                         if callback then pcall(callback, active) end
+                    end
+
+                    SwitchBg.MouseButton1Click:Connect(function()
+                        setToggle(not active)
                     end)
 
-                    -- Кнопка доп. настроек (•••)
+                    -- Подсветка строки при наведении
+                    TFrame.MouseEnter:Connect(function()
+                        TweenService:Create(TFrame, TweenInfo.new(0.12), {BackgroundTransparency = 0.75}):Play()
+                    end)
+                    TFrame.MouseLeave:Connect(function()
+                        TweenService:Create(TFrame, TweenInfo.new(0.12), {BackgroundTransparency = 1}):Play()
+                    end)
+
+                    -- Кнопка доп. настроек (•••) С АБСОЛЮТНЫМ СОХРАНЕНИЕМ СОСТОЯНИЯ (PERSISTENCE)
                     if optionsTable and type(optionsTable) == "table" and #optionsTable > 0 then
                         local DotsBtn = Instance.new("TextButton")
                         DotsBtn.Name = RandomString(6)
                         DotsBtn.Size = UDim2.new(0, 20, 0, 16)
-                        DotsBtn.Position = UDim2.new(1, -58, 0.5, -8)
+                        DotsBtn.Position = UDim2.new(1, -56, 0.5, -8)
                         DotsBtn.BackgroundColor3 = Theme.Element
                         DotsBtn.Text = "•••"
                         DotsBtn.TextColor3 = Theme.SubText
@@ -806,7 +817,8 @@ function VoltClips:CreateWindow(hubTitle)
 
                             for _, opt in ipairs(optionsTable) do
                                 if opt.Type == "Toggle" then
-                                    local pActive = opt.Default or false
+                                    -- Сохранение состояния: читаем сохранённое значение opt._Value
+                                    local pActive = (opt._Value ~= nil) and opt._Value or (opt.Default or false)
 
                                     local pFrame = Instance.new("Frame")
                                     pFrame.Size = UDim2.new(1, 0, 0, 24)
@@ -846,6 +858,7 @@ function VoltClips:CreateWindow(hubTitle)
 
                                     pSwitch.MouseButton1Click:Connect(function()
                                         pActive = not pActive
+                                        opt._Value = pActive -- Сохраняем в объект!
                                         TweenService:Create(pSwitch, TweenInfo.new(0.18), {BackgroundColor3 = pActive and Theme.Accent or Theme.Element}):Play()
                                         TweenService:Create(pLabel, TweenInfo.new(0.18), {TextColor3 = pActive and Theme.Text or Theme.SubText}):Play()
                                         TweenService:Create(pKnob, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -857,7 +870,7 @@ function VoltClips:CreateWindow(hubTitle)
                                 elseif opt.Type == "Slider" then
                                     local sMin = opt.Min or 0
                                     local sMax = opt.Max or 100
-                                    local sVal = math.clamp(opt.Default or sMin, sMin, sMax)
+                                    local sVal = (opt._Value ~= nil) and opt._Value or math.clamp(opt.Default or sMin, sMin, sMax)
 
                                     local sFrame = Instance.new("Frame")
                                     sFrame.Size = UDim2.new(1, 0, 0, 32)
@@ -916,6 +929,7 @@ function VoltClips:CreateWindow(hubTitle)
 
                                     local function setSliderVal(newVal)
                                         sVal = math.clamp(math.floor(newVal), sMin, sMax)
+                                        opt._Value = sVal -- Сохраняем значение!
                                         sValBox.Text = tostring(sVal)
                                         sFill.Size = UDim2.new((sVal-sMin)/(sMax-sMin), 0, 1, 0)
                                         if opt.Callback then pcall(opt.Callback, sVal) end
@@ -975,7 +989,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 3. СЛАЙДЕР (ЧЕТКИЙ И КРУПНЫЙ)
+                -- 3. СЛАЙДЕР (БЫСТРЫЙ И МОМЕНТАЛЬНЫЙ БЕЗ ЛАГОВ)
                 function Section:AddSlider(text, min, max, default, unit, callback)
                     if type(unit) == "function" then
                         callback = unit
@@ -991,7 +1005,6 @@ function VoltClips:CreateWindow(hubTitle)
                     SFrame.BackgroundTransparency = 1
                     SFrame.Parent = Container
 
-                    -- Название параметра сверху слева (11px GothamMedium)
                     local Title = Instance.new("TextLabel")
                     Title.Size = UDim2.new(1, -64, 0, 16)
                     Title.Position = UDim2.new(0, 0, 0, 0)
@@ -1004,7 +1017,6 @@ function VoltClips:CreateWindow(hubTitle)
                     Title.TextTruncate = Enum.TextTruncate.AtEnd
                     Title.Parent = SFrame
 
-                    -- Поле ввода значения сверху справа (11px GothamBold)
                     local ValueInput = Instance.new("TextBox")
                     ValueInput.Size = UDim2.new(0, 56, 0, 16)
                     ValueInput.Position = UDim2.new(1, -56, 0, 0)
@@ -1018,7 +1030,6 @@ function VoltClips:CreateWindow(hubTitle)
                     CreateCorner(ValueInput, 4)
                     CreateStroke(ValueInput, Theme.CardStroke, 1, 0.4)
 
-                    -- Полоса слайдера снизу
                     local Bar = Instance.new("Frame")
                     Bar.Size = UDim2.new(1, 0, 0, 4)
                     Bar.Position = UDim2.new(0, 0, 0, 22)
@@ -1039,10 +1050,11 @@ function VoltClips:CreateWindow(hubTitle)
                     Knob.Parent = Fill
                     CreateCorner(Knob, 5)
 
+                    -- Мгновенное обновление слайдера без лагов
                     local function setVal(newVal)
                         val = math.clamp(math.floor(newVal), min, max)
                         ValueInput.Text = tostring(val) .. unit
-                        local pos = (val - min) / (max - min)
+                        local pos = math.clamp((val - min) / (max - min), 0, 1)
                         Fill.Size = UDim2.new(pos, 0, 1, 0)
                         if callback then pcall(callback, val) end
                     end
@@ -1078,7 +1090,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 4. ТЕКСТОВОЕ ПОЛЕ (КРУПНОЕ И УДОБНОЕ)
+                -- 4. ТЕКСТОВОЕ ПОЛЕ
                 function Section:AddTextBox(text, placeholder, callback)
                     local TBoxFrame = Instance.new("Frame")
                     TBoxFrame.Name = RandomString(8)
@@ -1135,277 +1147,64 @@ function VoltClips:CreateWindow(hubTitle)
         return Tab
     end
 
-    -- АНИМАЦИЯ: НЕОНОВЫЕ КРИСТАЛЛЫ И СБОРКА НА RIGHTSHIFT
+    -- =========================================================
+    -- АНИМАЦИЯ NEVERLOOSE (ПЛАВНЫЙ МАСШТАБ И НЕОНОВОЕ СВЕЧЕНИЕ)
+    -- =========================================================
     local isOpen = true
     local animating = false
 
-    local function ShatterAndHide()
+    local function HideMenu()
         if animating then return end
         animating = true
         CloseAllPopups()
 
-        local mainAbsPos = Main.AbsolutePosition
-        local mainAbsSize = Main.AbsoluteSize
-        local center = mainAbsPos + mainAbsSize / 2
-
-        local Shockwave = Instance.new("Frame")
-        Shockwave.Name = "NeonShockwave"
-        Shockwave.Size = UDim2.new(0, 30, 0, 30)
-        Shockwave.Position = UDim2.new(0, center.X - 15, 0, center.Y - 15)
-        Shockwave.BackgroundColor3 = Theme.Accent
-        Shockwave.BackgroundTransparency = 0.65
-        Shockwave.ZIndex = 1005
-        Shockwave.Parent = FXLayer
-        CreateCorner(Shockwave, 999)
-        local swStroke = CreateStroke(Shockwave, Theme.AccentGlow, 2, 0.1)
-
-        TweenService:Create(Shockwave, TweenInfo.new(0.36, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Size = UDim2.new(0, 1000, 0, 1000),
-            Position = UDim2.new(0, center.X - 500, 0, center.Y - 500),
-            BackgroundTransparency = 1
-        }):Play()
-        TweenService:Create(swStroke, TweenInfo.new(0.36, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-            Transparency = 1,
-            Thickness = 0.5
+        TweenService:Create(MainScale, TweenInfo.new(0.16, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Scale = 0.94
         }):Play()
 
-        local shards = {}
+        TweenService:Create(mainStroke, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+            Transparency = 1
+        }):Play()
 
-        local function SpawnCrystalShard(absPos, absSize, bgCol, strokeCol, isSpecial, shardType)
-            local shard = Instance.new("Frame")
-            shard.Name = "CrystalShard"
-            shard.Size = UDim2.new(0, absSize.X, 0, absSize.Y)
-            shard.Position = UDim2.new(0, absPos.X, 0, absPos.Y)
-            shard.BackgroundColor3 = bgCol or Theme.Crystal
-            shard.BackgroundTransparency = 0.1
-            shard.BorderSizePixel = 0
-            shard.ZIndex = isSpecial and 1002 or 1000
-            shard.Parent = FXLayer
-
-            CreateCorner(shard, (shardType == "sharp") and 2 or (isSpecial and 6 or 4))
-            local sStroke = CreateStroke(shard, strokeCol or Theme.Accent, (isSpecial and 1.6 or 1.2), 0.1)
-
-            if isSpecial or shardType == "crystal" then
-                local CoreGlow = Instance.new("Frame")
-                CoreGlow.Size = UDim2.new(0.6, 0, 0.6, 0)
-                CoreGlow.Position = UDim2.new(0.2, 0, 0.2, 0)
-                CoreGlow.BackgroundColor3 = Theme.AccentGlow
-                CoreGlow.BackgroundTransparency = 0.75
-                CoreGlow.BorderSizePixel = 0
-                CoreGlow.ZIndex = shard.ZIndex + 1
-                CoreGlow.Parent = shard
-                CreateCorner(CoreGlow, 3)
-            end
-
-            local pieceCenter = absPos + absSize / 2
-            local dir = (pieceCenter - center)
-            if dir.Magnitude < 8 then
-                local angle = math.random(0, 360) * (math.pi / 180)
-                dir = Vector2.new(math.cos(angle), math.sin(angle))
-            end
-            dir = dir.Unit
-
-            local dist = math.random(320, 680)
-            local targetPos = absPos + (dir * dist) + Vector2.new(math.random(-60, 60), math.random(-60, 60))
-            local targetRot = math.random(-180, 180)
-
-            table.insert(shards, {
-                frame = shard,
-                stroke = sStroke,
-                targetPos = targetPos,
-                targetRot = targetRot,
-                origPos = absPos,
-                origSize = absSize
-            })
-        end
-
-        SpawnCrystalShard(Sidebar.AbsolutePosition, Sidebar.AbsoluteSize, Theme.Sidebar, Theme.AccentGlow, true, "panel")
-        SpawnCrystalShard(TopBar.AbsolutePosition, TopBar.AbsoluteSize, Theme.Background, Theme.Accent, false, "panel")
-
-        if Window.ActiveTab and Window.ActiveTab.ActiveSubTab then
-            local page = Window.ActiveTab.ActiveSubTab.Page
-            for _, col in pairs(page:GetChildren()) do
-                if col:IsA("ScrollingFrame") then
-                    for _, card in pairs(col:GetChildren()) do
-                        if card:IsA("Frame") and card.Visible and card.AbsoluteSize.Y > 10 then
-                            SpawnCrystalShard(card.AbsolutePosition, card.AbsoluteSize, Theme.Crystal, Theme.AccentGlow, true, "crystal")
-                        end
-                    end
-                end
-            end
-        end
-
-        for i = 1, 22 do
-            local isLong = (math.random(1, 2) == 1)
-            local randW = isLong and math.random(10, 24) or math.random(25, 55)
-            local randH = isLong and math.random(35, 75) or math.random(18, 45)
-            local randX = mainAbsPos.X + math.random(15, math.max(25, mainAbsSize.X - 60))
-            local randY = mainAbsPos.Y + math.random(15, math.max(25, mainAbsSize.Y - 50))
-            local neonColor = (i % 3 == 0) and Theme.AccentGlow or Theme.Accent
-            SpawnCrystalShard(Vector2.new(randX, randY), Vector2.new(randW, randH), Theme.Crystal, neonColor, false, "sharp")
-        end
-
-        for i = 1, 18 do
-            local sparkSize = math.random(4, 8)
-            local spark = Instance.new("Frame")
-            spark.Name = "Spark"
-            spark.Size = UDim2.new(0, sparkSize, 0, sparkSize)
-            local randX = center.X + math.random(-120, 120)
-            local randY = center.Y + math.random(-80, 80)
-            spark.Position = UDim2.new(0, randX, 0, randY)
-            spark.BackgroundColor3 = Color3.fromRGB(220, 250, 255)
-            spark.ZIndex = 1004
-            spark.Parent = FXLayer
-            CreateCorner(spark, 999)
-            CreateStroke(spark, Theme.AccentGlow, 1, 0.1)
-
-            local angle = math.random(0, 360) * (math.pi / 180)
-            local sDist = math.random(400, 750)
-            local sTarget = Vector2.new(randX + math.cos(angle) * sDist, randY + math.sin(angle) * sDist)
-
-            local dur = 0.32 + math.random() * 0.1
-            TweenService:Create(spark, TweenInfo.new(dur, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                Position = UDim2.new(0, sTarget.X, 0, sTarget.Y),
-                BackgroundTransparency = 1,
-                Size = UDim2.new(0, 1, 0, 1)
-            }):Play()
-        end
-
+        task.wait(0.16)
         Main.Visible = false
-
-        for i, s in ipairs(shards) do
-            local delay = math.random() * 0.05
-            local dur = 0.30 + math.random() * 0.10
-            task.delay(delay, function()
-                if s.frame and s.frame.Parent then
-                    TweenService:Create(s.frame, TweenInfo.new(dur, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                        Position = UDim2.new(0, s.targetPos.X, 0, s.targetPos.Y),
-                        Rotation = s.targetRot,
-                        Size = UDim2.new(0, s.origSize.X * 0.25, 0, s.origSize.Y * 0.25),
-                        BackgroundTransparency = 1
-                    }):Play()
-                    TweenService:Create(s.stroke, TweenInfo.new(dur, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-                        Transparency = 1,
-                        Color = Theme.AccentGlow
-                    }):Play()
-                end
-            end)
-        end
-
-        task.wait(0.44)
-        FXLayer:ClearAllChildren()
         isOpen = false
         animating = false
     end
 
-    local function AssembleAndShow()
+    local function ShowMenu()
         if animating then return end
         animating = true
 
-        local mainAbsPos = Main.AbsolutePosition
-        local mainAbsSize = Main.AbsoluteSize
-        local center = mainAbsPos + mainAbsSize / 2
-
-        local shards = {}
-
-        local function CreateAssembleShard(absPos, absSize, bgCol, strokeCol, isSpecial)
-            local pieceCenter = absPos + absSize / 2
-            local dir = (pieceCenter - center)
-            if dir.Magnitude < 8 then
-                local angle = math.random(0, 360) * (math.pi / 180)
-                dir = Vector2.new(math.cos(angle), math.sin(angle))
-            end
-            dir = dir.Unit
-
-            local dist = math.random(320, 650)
-            local startPos = absPos + (dir * dist) + Vector2.new(math.random(-60, 60), math.random(-60, 60))
-            local startRot = math.random(-180, 180)
-
-            local shard = Instance.new("Frame")
-            shard.Name = "AssembleShard"
-            shard.Size = UDim2.new(0, absSize.X * 0.5, 0, absSize.Y * 0.5)
-            shard.Position = UDim2.new(0, startPos.X, 0, startPos.Y)
-            shard.Rotation = startRot
-            shard.BackgroundColor3 = bgCol or Theme.Crystal
-            shard.BackgroundTransparency = 1
-            shard.BorderSizePixel = 0
-            shard.ZIndex = isSpecial and 1002 or 1000
-            shard.Parent = FXLayer
-            CreateCorner(shard, isSpecial and 6 or 4)
-            local sStroke = CreateStroke(shard, strokeCol or Theme.AccentGlow, 1.5, 1)
-
-            table.insert(shards, {
-                frame = shard,
-                stroke = sStroke,
-                origPos = absPos,
-                origSize = absSize
-            })
-        end
-
-        CreateAssembleShard(Sidebar.AbsolutePosition, Sidebar.AbsoluteSize, Theme.Sidebar, Theme.AccentGlow, true)
-        CreateAssembleShard(TopBar.AbsolutePosition, TopBar.AbsoluteSize, Theme.Background, Theme.Accent, false)
-
-        if Window.ActiveTab and Window.ActiveTab.ActiveSubTab then
-            local page = Window.ActiveTab.ActiveSubTab.Page
-            for _, col in pairs(page:GetChildren()) do
-                if col:IsA("ScrollingFrame") then
-                    for _, card in pairs(col:GetChildren()) do
-                        if card:IsA("Frame") and card.Visible and card.AbsoluteSize.Y > 10 then
-                            CreateAssembleShard(card.AbsolutePosition, card.AbsoluteSize, Theme.Crystal, Theme.AccentGlow, true)
-                        end
-                    end
-                end
-            end
-        end
-
-        for i = 1, 16 do
-            local isLong = (math.random(1, 2) == 1)
-            local randW = isLong and math.random(12, 26) or math.random(30, 60)
-            local randH = isLong and math.random(35, 70) or math.random(20, 50)
-            local randX = mainAbsPos.X + math.random(15, math.max(25, mainAbsSize.X - 60))
-            local randY = mainAbsPos.Y + math.random(15, math.max(25, mainAbsSize.Y - 50))
-            CreateAssembleShard(Vector2.new(randX, randY), Vector2.new(randW, randH), Theme.Crystal, Theme.AccentGlow, false)
-        end
-
-        for _, s in ipairs(shards) do
-            local delay = math.random() * 0.05
-            local dur = 0.38 + math.random() * 0.08
-            task.delay(delay, function()
-                if s.frame and s.frame.Parent then
-                    TweenService:Create(s.frame, TweenInfo.new(dur, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-                        Position = UDim2.new(0, s.origPos.X, 0, s.origPos.Y),
-                        Rotation = 0,
-                        Size = UDim2.new(0, s.origSize.X, 0, s.origSize.Y),
-                        BackgroundTransparency = 0.12
-                    }):Play()
-                    TweenService:Create(s.stroke, TweenInfo.new(dur, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-                        Transparency = 0.2,
-                        Color = Theme.Accent
-                    }):Play()
-                end
-            end)
-        end
-
-        task.wait(0.42)
-
-        mainStroke.Color = Theme.AccentGlow
-        mainStroke.Transparency = 0
         Main.Visible = true
-        TweenService:Create(mainStroke, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        MainScale.Scale = 0.94
+        mainStroke.Transparency = 1
+        mainStroke.Color = Theme.AccentGlow
+
+        TweenService:Create(MainScale, TweenInfo.new(0.20, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Scale = 1.0
+        }):Play()
+
+        TweenService:Create(mainStroke, TweenInfo.new(0.20, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Transparency = 0.2,
+            Color = Theme.Accent
+        }):Play()
+
+        task.wait(0.22)
+        TweenService:Create(mainStroke, TweenInfo.new(0.15), {
             Color = Theme.CardStroke,
             Transparency = 0.2
         }):Play()
 
-        FXLayer:ClearAllChildren()
         isOpen = true
         animating = false
     end
 
     local function ToggleMenu()
         if isOpen then
-            ShatterAndHide()
+            HideMenu()
         else
-            AssembleAndShow()
+            ShowMenu()
         end
     end
 
