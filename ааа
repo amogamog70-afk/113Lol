@@ -66,10 +66,7 @@ local BuiltInIcons = {
     ["Movement"] = "rbxassetid://136160678435000"
 }
 
--- Кастомный цвет фона для вкладки HvH
-local CustomTabAccents = {
-    ["HvH"] = Color3.fromRGB(255, 45, 85) -- Неоново-алый агрессивный цвет
-}
+-- (Кастомные акценты убраны — красный фон иконок не используется)
 
 local Theme = {
     Background = Color3.fromRGB(11, 13, 18),
@@ -164,7 +161,7 @@ function VoltClips:CreateWindow(hubTitle)
     Logo.Text = "VC"
     Logo.TextColor3 = Theme.Accent
     Logo.TextSize = 17
-    Logo.Font = Enum.Font.GothamBold
+    Logo.Font = Enum.Font.GothamBlack
     Logo.Parent = Sidebar
 
     local TabList = Instance.new("Frame")
@@ -226,21 +223,14 @@ function VoltClips:CreateWindow(hubTitle)
             imageUri = (#cleanId > 0) and ("rbxassetid://" .. cleanId) or ""
         end
 
-        local isHvH = (tabName == "HvH")
-        local customAccent = CustomTabAccents[tabName]
-
-        -- Контейнер Иконки Вкладки
+        -- Контейнер Иконки Вкладки (без красного фона)
         local TabBtnBg = Instance.new("Frame")
         TabBtnBg.Name = RandomString(8)
         TabBtnBg.Size = UDim2.new(0, 30, 0, 30)
-        TabBtnBg.BackgroundColor3 = isHvH and customAccent or Theme.Element
-        TabBtnBg.BackgroundTransparency = isHvH and 0.2 or 1
+        TabBtnBg.BackgroundColor3 = Theme.Accent
+        TabBtnBg.BackgroundTransparency = 1  -- прозрачный по умолчанию
         TabBtnBg.Parent = TabList
         CreateCorner(TabBtnBg, 8)
-        
-        if isHvH then
-            CreateStroke(TabBtnBg, customAccent, 1, 0.2)
-        end
 
         local TabBtn = Instance.new("ImageButton")
         TabBtn.Name = RandomString(8)
@@ -248,7 +238,7 @@ function VoltClips:CreateWindow(hubTitle)
         TabBtn.Position = UDim2.new(0.5, -10, 0.5, -10)
         TabBtn.BackgroundTransparency = 1
         TabBtn.Image = imageUri
-        TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.SubText
+        TabBtn.ImageColor3 = Theme.SubText  -- всегда серый, активный → Accent
         TabBtn.ScaleType = Enum.ScaleType.Fit
         TabBtn.AutoButtonColor = false
         TabBtn.Parent = TabBtnBg
@@ -257,19 +247,45 @@ function VoltClips:CreateWindow(hubTitle)
 
         function Tab:AddSubTab(subName)
             local SubTab = {}
+            local subCount = #Tab.SubTabs
+
+            -- Вертикальный разделитель между sub-tabs (кроме первого)
+            if subCount > 0 then
+                local Divider = Instance.new("Frame")
+                Divider.Name = RandomString(6)
+                Divider.Size = UDim2.new(0, 1, 0.55, 0)
+                Divider.BackgroundColor3 = Theme.CardStroke
+                Divider.BackgroundTransparency = 0.3
+                Divider.BorderSizePixel = 0
+                Divider.Visible = false
+                Divider.Parent = SubTabContainer
+                SubTab._Divider = Divider
+            end
 
             local SubBtn = Instance.new("TextButton")
             SubBtn.Name = RandomString(8)
-            SubBtn.Size = UDim2.new(0, 68, 0, 22)
-            SubBtn.BackgroundColor3 = Theme.Card
-            SubBtn.BackgroundTransparency = 0.4
+            SubBtn.Size = UDim2.new(0, 68, 1, 0)
+            SubBtn.BackgroundTransparency = 1
             SubBtn.Text = subName
             SubBtn.TextColor3 = Theme.SubText
-            SubBtn.Font = Enum.Font.GothamMedium
+            SubBtn.Font = Enum.Font.GothamBold
             SubBtn.TextSize = 11
             SubBtn.Visible = false
             SubBtn.Parent = SubTabContainer
-            CreateCorner(SubBtn, 5)
+            -- CreateCorner убрана — нет фона
+
+            -- Underline (синяя черта снизу активного таба)
+            local Underline = Instance.new("Frame")
+            Underline.Name = "Underline"
+            Underline.Size = UDim2.new(0.7, 0, 0, 2)
+            Underline.Position = UDim2.new(0.15, 0, 1, -2)
+            Underline.BackgroundColor3 = Theme.Accent
+            Underline.BorderSizePixel = 0
+            Underline.BackgroundTransparency = 1
+            Underline.Parent = SubBtn
+            local ULCorner = Instance.new("UICorner")
+            ULCorner.CornerRadius = UDim.new(1, 0)
+            ULCorner.Parent = Underline
 
             local Page = Instance.new("Frame")
             Page.Name = RandomString(8)
@@ -341,10 +357,10 @@ function VoltClips:CreateWindow(hubTitle)
                 TitleLabel.Size = UDim2.new(1, -16, 0, 22)
                 TitleLabel.Position = UDim2.new(0, 10, 0, 4)
                 TitleLabel.BackgroundTransparency = 1
-                TitleLabel.Text = secTitle
-                TitleLabel.TextColor3 = Theme.Text
-                TitleLabel.Font = Enum.Font.GothamBold
-                TitleLabel.TextSize = 11
+                TitleLabel.Text = string.upper(secTitle)
+                TitleLabel.TextColor3 = Theme.Accent
+                TitleLabel.Font = Enum.Font.GothamBlack
+                TitleLabel.TextSize = 10
                 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
                 TitleLabel.Parent = Card
 
@@ -371,7 +387,7 @@ function VoltClips:CreateWindow(hubTitle)
                     Btn.BackgroundColor3 = Theme.Element
                     Btn.Text = text
                     Btn.TextColor3 = Theme.Text
-                    Btn.Font = Enum.Font.GothamMedium
+                    Btn.Font = Enum.Font.GothamBold
                     Btn.TextSize = 11
                     Btn.AutoButtonColor = false
                     Btn.Parent = Container
@@ -416,8 +432,8 @@ function VoltClips:CreateWindow(hubTitle)
                     Label.Size = UDim2.new(1, optionsTable and -65 or -42, 1, 0)
                     Label.BackgroundTransparency = 1
                     Label.Text = text
-                    Label.TextColor3 = active and Theme.Accent or Theme.SubText
-                    Label.Font = Enum.Font.GothamMedium
+                    Label.TextColor3 = active and Theme.Accent or Theme.Text
+                    Label.Font = Enum.Font.GothamBold
                     Label.TextSize = 11
                     Label.TextXAlignment = Enum.TextXAlignment.Left
                     Label.Parent = TFrame
@@ -443,7 +459,7 @@ function VoltClips:CreateWindow(hubTitle)
                     SwitchBg.MouseButton1Click:Connect(function()
                         active = not active
                         TweenService:Create(SwitchBg, TweenInfo.new(0.2), {BackgroundColor3 = active and Theme.Accent or Theme.Element}):Play()
-                        TweenService:Create(Label, TweenInfo.new(0.2), {TextColor3 = active and Theme.Accent or Theme.SubText}):Play()
+                        TweenService:Create(Label, TweenInfo.new(0.2), {TextColor3 = active and Theme.Accent or Theme.Text}):Play()
                         TweenService:Create(Knob, TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
                             Position = active and UDim2.new(1, -14, 0.5, -6) or UDim2.new(0, 2, 0.5, -6)
                         }):Play()
@@ -467,66 +483,275 @@ function VoltClips:CreateWindow(hubTitle)
                         local dotsStroke = CreateStroke(DotsBtn, Theme.CardStroke, 1, 0.5)
 
                         -- Создание Всплывающего Окна Настроек (Sub-GUI)
+                        -- Popup рисуется прямо в ScreenGui с высоким ZIndex — поверх MainFrame
                         DotsBtn.MouseButton1Click:Connect(function()
                             CloseAllPopups()
+
+                            -- Блокирующий оверлей (не даёт кликать по основному меню)
+                            local BlockOverlay = Instance.new("TextButton")
+                            BlockOverlay.Name = RandomString(8) .. "_block"
+                            BlockOverlay.Size = UDim2.new(1, 0, 1, 0)
+                            BlockOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                            BlockOverlay.BackgroundTransparency = 0.65
+                            BlockOverlay.BorderSizePixel = 0
+                            BlockOverlay.Text = ""
+                            BlockOverlay.AutoButtonColor = false
+                            BlockOverlay.ZIndex = 900
+                            BlockOverlay.Parent = ScreenGui
 
                             local Popup = Instance.new("Frame")
                             Popup.Name = RandomString(10)
                             Popup.BackgroundColor3 = Theme.Card
-                            Popup.Parent = OverlayFolder
-                            CreateCorner(Popup, 8)
-                            CreateStroke(Popup, Theme.Accent, 1, 0.3)
+                            Popup.ZIndex = 901
+                            Popup.Parent = ScreenGui
+                            CreateCorner(Popup, 10)
+                            CreateStroke(Popup, Theme.Accent, 1.5, 0.3)
 
-                            -- Позиция чуть правее кнопки трех точек
+                            -- Позиционирование относительно экрана
                             local btnAbsPos = DotsBtn.AbsolutePosition
-                            Popup.Position = UDim2.new(0, btnAbsPos.X + 25, 0, btnAbsPos.Y - 5)
+                            local screenSize = workspace.CurrentCamera.ViewportSize
+                            local popupW = 180
+                            -- выровнять чтобы не выходил за правый край
+                            local posX = math.min(btnAbsPos.X + 28, screenSize.X - popupW - 10)
+                            Popup.Position = UDim2.new(0, posX, 0, btnAbsPos.Y - 8)
 
-                            local PopContainer = Instance.new("Frame")
-                            PopContainer.Size = UDim2.new(1, -16, 1, -16)
-                            PopContainer.Position = UDim2.new(0, 8, 0, 8)
+                            -- Заголовок всплывашки
+                            local PopHeader = Instance.new("Frame")
+                            PopHeader.Size = UDim2.new(1, 0, 0, 30)
+                            PopHeader.BackgroundColor3 = Theme.Sidebar
+                            PopHeader.BorderSizePixel = 0
+                            PopHeader.ZIndex = 902
+                            PopHeader.Parent = Popup
+                            CreateCorner(PopHeader, 10)
+
+                            -- Патч нижних углов заголовка
+                            local PopHeaderPatch = Instance.new("Frame")
+                            PopHeaderPatch.Size = UDim2.new(1, 0, 0, 8)
+                            PopHeaderPatch.Position = UDim2.new(0, 0, 1, -8)
+                            PopHeaderPatch.BackgroundColor3 = Theme.Sidebar
+                            PopHeaderPatch.BorderSizePixel = 0
+                            PopHeaderPatch.ZIndex = 902
+                            PopHeaderPatch.Parent = PopHeader
+
+                            local PopHeaderLine = Instance.new("Frame")
+                            PopHeaderLine.Size = UDim2.new(1, 0, 0, 1)
+                            PopHeaderLine.Position = UDim2.new(0, 0, 1, -1)
+                            PopHeaderLine.BackgroundColor3 = Theme.CardStroke
+                            PopHeaderLine.BorderSizePixel = 0
+                            PopHeaderLine.ZIndex = 903
+                            PopHeaderLine.Parent = PopHeader
+
+                            local PopHeaderTitle = Instance.new("TextLabel")
+                            PopHeaderTitle.Size = UDim2.new(1, -10, 1, 0)
+                            PopHeaderTitle.Position = UDim2.new(0, 8, 0, 0)
+                            PopHeaderTitle.BackgroundTransparency = 1
+                            PopHeaderTitle.Text = text .. " Options"
+                            PopHeaderTitle.TextColor3 = Theme.Text
+                            PopHeaderTitle.Font = Enum.Font.GothamBlack
+                            PopHeaderTitle.TextSize = 10
+                            PopHeaderTitle.TextXAlignment = Enum.TextXAlignment.Left
+                            PopHeaderTitle.ZIndex = 903
+                            PopHeaderTitle.Parent = PopHeader
+
+                            local PopContainer = Instance.new("ScrollingFrame")
+                            PopContainer.Size = UDim2.new(1, -16, 1, -42)
+                            PopContainer.Position = UDim2.new(0, 8, 0, 36)
                             PopContainer.BackgroundTransparency = 1
+                            PopContainer.BorderSizePixel = 0
+                            PopContainer.ScrollBarThickness = 2
+                            PopContainer.ScrollBarImageColor3 = Theme.Accent
+                            PopContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
+                            PopContainer.ZIndex = 902
                             PopContainer.Parent = Popup
 
                             local PopList = Instance.new("UIListLayout")
                             PopList.Padding = UDim.new(0, 6)
                             PopList.Parent = PopContainer
 
-                            -- Авто-расчет размеров всплывающего окна
+                            -- Авто-расчет высоты (макс 300)
                             PopList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-                                Popup.Size = UDim2.new(0, 160, 0, PopList.AbsoluteContentSize.Y + 16)
+                                local newH = math.min(PopList.AbsoluteContentSize.Y + 46, 300)
+                                Popup.Size = UDim2.new(0, popupW, 0, newH)
+                            end)
+                            Popup.Size = UDim2.new(0, popupW, 0, 46)  -- начальный размер
+
+                            -- Закрытие по клику на оверлей
+                            BlockOverlay.MouseButton1Click:Connect(function()
+                                BlockOverlay:Destroy()
+                                Popup:Destroy()
                             end)
 
                             -- Заполнение опций внутри всплывашки
                             for _, opt in ipairs(optionsTable) do
                                 if opt.Type == "Toggle" then
+                                    -- Toggle в стиле основного меню
                                     local pActive = opt.Default or false
-                                    local pBtn = Instance.new("TextButton")
-                                    pBtn.Size = UDim2.new(1, 0, 0, 22)
-                                    pBtn.BackgroundColor3 = Theme.Element
-                                    pBtn.Text = opt.Text .. (pActive and " [ON]" or " [OFF]")
-                                    pBtn.TextColor3 = pActive and Theme.Accent or Theme.SubText
-                                    pBtn.Font = Enum.Font.GothamMedium
-                                    pBtn.TextSize = 10
-                                    pBtn.Parent = PopContainer
-                                    CreateCorner(pBtn, 4)
 
-                                    pBtn.MouseButton1Click:Connect(function()
+                                    local pFrame = Instance.new("Frame")
+                                    pFrame.Size = UDim2.new(1, 0, 0, 28)
+                                    pFrame.BackgroundColor3 = Theme.Element
+                                    pFrame.BorderSizePixel = 0
+                                    pFrame.ZIndex = 903
+                                    pFrame.Parent = PopContainer
+                                    CreateCorner(pFrame, 6)
+                                    CreateStroke(pFrame, Theme.CardStroke, 1, 0.4)
+
+                                    local pLabel = Instance.new("TextLabel")
+                                    pLabel.Size = UDim2.new(1, -46, 1, 0)
+                                    pLabel.Position = UDim2.new(0, 8, 0, 0)
+                                    pLabel.BackgroundTransparency = 1
+                                    pLabel.Text = opt.Text
+                                    pLabel.TextColor3 = pActive and Theme.Accent or Theme.Text
+                                    pLabel.Font = Enum.Font.GothamBold
+                                    pLabel.TextSize = 10
+                                    pLabel.TextXAlignment = Enum.TextXAlignment.Left
+                                    pLabel.ZIndex = 904
+                                    pLabel.Parent = pFrame
+
+                                    local pSwitch = Instance.new("TextButton")
+                                    pSwitch.Size = UDim2.new(0, 30, 0, 15)
+                                    pSwitch.Position = UDim2.new(1, -36, 0.5, -7)
+                                    pSwitch.BackgroundColor3 = pActive and Theme.Accent or Theme.Card
+                                    pSwitch.Text = ""
+                                    pSwitch.AutoButtonColor = false
+                                    pSwitch.ZIndex = 904
+                                    pSwitch.Parent = pFrame
+                                    CreateCorner(pSwitch, 8)
+
+                                    local pKnob = Instance.new("Frame")
+                                    pKnob.Size = UDim2.new(0, 11, 0, 11)
+                                    pKnob.Position = pActive and UDim2.new(1, -13, 0.5, -5) or UDim2.new(0, 2, 0.5, -5)
+                                    pKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                                    pKnob.ZIndex = 905
+                                    pKnob.Parent = pSwitch
+                                    CreateCorner(pKnob, 6)
+
+                                    pSwitch.MouseButton1Click:Connect(function()
                                         pActive = not pActive
-                                        pBtn.Text = opt.Text .. (pActive and " [ON]" or " [OFF]")
-                                        pBtn.TextColor3 = pActive and Theme.Accent or Theme.SubText
+                                        TweenService:Create(pSwitch, TweenInfo.new(0.18), {BackgroundColor3 = pActive and Theme.Accent or Theme.Card}):Play()
+                                        TweenService:Create(pLabel, TweenInfo.new(0.18), {TextColor3 = pActive and Theme.Accent or Theme.Text}):Play()
+                                        TweenService:Create(pKnob, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+                                            Position = pActive and UDim2.new(1, -13, 0.5, -5) or UDim2.new(0, 2, 0.5, -5)
+                                        }):Play()
                                         if opt.Callback then pcall(opt.Callback, pActive) end
                                     end)
+
+                                elseif opt.Type == "Slider" then
+                                    -- Slider в стиле основного меню
+                                    local sMin = opt.Min or 0
+                                    local sMax = opt.Max or 100
+                                    local sVal = math.clamp(opt.Default or sMin, sMin, sMax)
+
+                                    local sFrame = Instance.new("Frame")
+                                    sFrame.Size = UDim2.new(1, 0, 0, 38)
+                                    sFrame.BackgroundColor3 = Theme.Element
+                                    sFrame.BorderSizePixel = 0
+                                    sFrame.ZIndex = 903
+                                    sFrame.Parent = PopContainer
+                                    CreateCorner(sFrame, 6)
+                                    CreateStroke(sFrame, Theme.CardStroke, 1, 0.4)
+
+                                    local sLabel = Instance.new("TextLabel")
+                                    sLabel.Size = UDim2.new(1, -50, 0, 18)
+                                    sLabel.Position = UDim2.new(0, 8, 0, 4)
+                                    sLabel.BackgroundTransparency = 1
+                                    sLabel.Text = opt.Text
+                                    sLabel.TextColor3 = Theme.Text
+                                    sLabel.Font = Enum.Font.GothamBold
+                                    sLabel.TextSize = 10
+                                    sLabel.TextXAlignment = Enum.TextXAlignment.Left
+                                    sLabel.ZIndex = 904
+                                    sLabel.Parent = sFrame
+
+                                    local sValBox = Instance.new("TextBox")
+                                    sValBox.Size = UDim2.new(0, 38, 0, 16)
+                                    sValBox.Position = UDim2.new(1, -44, 0, 4)
+                                    sValBox.BackgroundColor3 = Theme.Card
+                                    sValBox.Text = tostring(sVal)
+                                    sValBox.TextColor3 = Theme.Accent
+                                    sValBox.Font = Enum.Font.GothamBlack
+                                    sValBox.TextSize = 10
+                                    sValBox.BorderSizePixel = 0
+                                    sValBox.ClearTextOnFocus = false
+                                    sValBox.ZIndex = 904
+                                    sValBox.Parent = sFrame
+                                    CreateCorner(sValBox, 4)
+
+                                    local sBar = Instance.new("Frame")
+                                    sBar.Size = UDim2.new(1, -16, 0, 4)
+                                    sBar.Position = UDim2.new(0, 8, 0, 28)
+                                    sBar.BackgroundColor3 = Theme.Card
+                                    sBar.ZIndex = 904
+                                    sBar.Parent = sFrame
+                                    CreateCorner(sBar, 2)
+
+                                    local sFill = Instance.new("Frame")
+                                    sFill.Size = UDim2.new((sVal-sMin)/(sMax-sMin), 0, 1, 0)
+                                    sFill.BackgroundColor3 = Theme.Accent
+                                    sFill.ZIndex = 905
+                                    sFill.Parent = sBar
+                                    CreateCorner(sFill, 2)
+
+                                    local sKnob = Instance.new("Frame")
+                                    sKnob.Size = UDim2.new(0, 10, 0, 10)
+                                    sKnob.Position = UDim2.new(1, -5, 0.5, -5)
+                                    sKnob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                                    sKnob.ZIndex = 906
+                                    sKnob.Parent = sFill
+                                    CreateCorner(sKnob, 5)
+
+                                    local function setSliderVal(newVal)
+                                        sVal = math.clamp(math.floor(newVal), sMin, sMax)
+                                        sValBox.Text = tostring(sVal)
+                                        TweenService:Create(sFill, TweenInfo.new(0.07), {Size = UDim2.new((sVal-sMin)/(sMax-sMin), 0, 1, 0)}):Play()
+                                        if opt.Callback then pcall(opt.Callback, sVal) end
+                                    end
+
+                                    sValBox.FocusLost:Connect(function()
+                                        local n = tonumber(sValBox.Text)
+                                        if n then setSliderVal(n) else sValBox.Text = tostring(sVal) end
+                                    end)
+
+                                    local sSliding = false
+                                    sBar.InputBegan:Connect(function(input)
+                                        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                                            sSliding = true
+                                            local p = math.clamp((input.Position.X - sBar.AbsolutePosition.X) / sBar.AbsoluteSize.X, 0, 1)
+                                            setSliderVal(sMin + (sMax - sMin) * p)
+                                        end
+                                    end)
+                                    UserInputService.InputEnded:Connect(function(input)
+                                        if input.UserInputType == Enum.UserInputType.MouseButton1 then sSliding = false end
+                                    end)
+                                    UserInputService.InputChanged:Connect(function(input)
+                                        if sSliding and input.UserInputType == Enum.UserInputType.MouseMovement then
+                                            local p = math.clamp((input.Position.X - sBar.AbsolutePosition.X) / sBar.AbsoluteSize.X, 0, 1)
+                                            setSliderVal(sMin + (sMax - sMin) * p)
+                                        end
+                                    end)
+
                                 elseif opt.Type == "Button" then
                                     local pBtn = Instance.new("TextButton")
-                                    pBtn.Size = UDim2.new(1, 0, 0, 22)
+                                    pBtn.Size = UDim2.new(1, 0, 0, 26)
                                     pBtn.BackgroundColor3 = Theme.Element
                                     pBtn.Text = opt.Text
                                     pBtn.TextColor3 = Theme.Text
-                                    pBtn.Font = Enum.Font.GothamMedium
+                                    pBtn.Font = Enum.Font.GothamBold
                                     pBtn.TextSize = 10
+                                    pBtn.AutoButtonColor = false
+                                    pBtn.ZIndex = 903
                                     pBtn.Parent = PopContainer
-                                    CreateCorner(pBtn, 4)
+                                    CreateCorner(pBtn, 6)
+                                    local pbStroke = CreateStroke(pBtn, Theme.CardStroke, 1, 0.4)
 
+                                    pBtn.MouseEnter:Connect(function()
+                                        TweenService:Create(pBtn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Card}):Play()
+                                        TweenService:Create(pbStroke, TweenInfo.new(0.15), {Color = Theme.Accent, Transparency = 0.2}):Play()
+                                    end)
+                                    pBtn.MouseLeave:Connect(function()
+                                        TweenService:Create(pBtn, TweenInfo.new(0.15), {BackgroundColor3 = Theme.Element}):Play()
+                                        TweenService:Create(pbStroke, TweenInfo.new(0.15), {Color = Theme.CardStroke, Transparency = 0.4}):Play()
+                                    end)
                                     pBtn.MouseButton1Click:Connect(function()
                                         if opt.Callback then pcall(opt.Callback) end
                                     end)
@@ -686,21 +911,24 @@ function VoltClips:CreateWindow(hubTitle)
             SubBtn.MouseButton1Click:Connect(function()
                 CloseAllPopups()
                 for _, st in pairs(Tab.SubTabs) do
-                    st.Button.TextColor3 = Theme.SubText
-                    st.Button.BackgroundColor3 = Theme.Card
+                    TweenService:Create(st.Button, TweenInfo.new(0.15), {TextColor3 = Theme.SubText}):Play()
+                    local ul = st.Button:FindFirstChild("Underline")
+                    if ul then TweenService:Create(ul, TweenInfo.new(0.15), {BackgroundTransparency = 1}):Play() end
                     st.Page.Visible = false
+                    if st._Divider then st._Divider.Visible = true end
                 end
-                SubBtn.TextColor3 = Theme.Accent
-                SubBtn.BackgroundColor3 = Theme.Sidebar
+                TweenService:Create(SubBtn, TweenInfo.new(0.15), {TextColor3 = Theme.Accent}):Play()
+                TweenService:Create(Underline, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play()
                 Page.Visible = true
             end)
 
             table.insert(Tab.SubTabs, SubTab)
             if #Tab.SubTabs == 1 then
                 SubBtn.TextColor3 = Theme.Accent
-                SubBtn.BackgroundColor3 = Theme.Sidebar
+                Underline.BackgroundTransparency = 0
                 Page.Visible = true
             end
+            if SubTab._Divider then SubTab._Divider.Visible = true end
 
             return SubTab
         end
@@ -708,37 +936,37 @@ function VoltClips:CreateWindow(hubTitle)
         TabBtn.MouseButton1Click:Connect(function()
             CloseAllPopups()
             for _, t in pairs(Tabs) do
-                t.Button.ImageColor3 = Theme.SubText
-                if t.Button.Parent and t.Button.Parent:IsA("Frame") and t.Button.Parent.BackgroundColor3 ~= CustomTabAccents["HvH"] then
-                    t.Button.Parent.BackgroundTransparency = 1
-                end
+                TweenService:Create(t.Button, TweenInfo.new(0.15), {ImageColor3 = Theme.SubText}):Play()
+                t.Button.Parent.BackgroundTransparency = 1
                 for _, st in pairs(t.SubTabs) do
                     st.Button.Visible = false
                     st.Page.Visible = false
+                    if st._Divider then st._Divider.Visible = false end
+                    local ul = st.Button:FindFirstChild("Underline")
+                    if ul then ul.BackgroundTransparency = 1 end
                 end
             end
-            TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.Accent
-            if not isHvH then
-                TabBtnBg.BackgroundTransparency = 0.8
-                TabBtnBg.BackgroundColor3 = Theme.Accent
-            end
+            TweenService:Create(TabBtn, TweenInfo.new(0.15), {ImageColor3 = Theme.Accent}):Play()
+            TabBtnBg.BackgroundTransparency = 0.78
+            TabBtnBg.BackgroundColor3 = Theme.Accent
 
             for _, st in pairs(Tab.SubTabs) do
                 st.Button.Visible = true
+                if st._Divider then st._Divider.Visible = true end
             end
             if #Tab.SubTabs > 0 then
                 Tab.SubTabs[1].Page.Visible = true
-                Tab.SubTabs[1].Button.TextColor3 = Theme.Accent
+                TweenService:Create(Tab.SubTabs[1].Button, TweenInfo.new(0.15), {TextColor3 = Theme.Accent}):Play()
+                local ul = Tab.SubTabs[1].Button:FindFirstChild("Underline")
+                if ul then TweenService:Create(ul, TweenInfo.new(0.15), {BackgroundTransparency = 0}):Play() end
             end
         end)
 
         table.insert(Tabs, Tab)
         if #Tabs == 1 then
-            TabBtn.ImageColor3 = isHvH and Color3.fromRGB(255, 255, 255) or Theme.Accent
-            if not isHvH then
-                TabBtnBg.BackgroundTransparency = 0.8
-                TabBtnBg.BackgroundColor3 = Theme.Accent
-            end
+            TweenService:Create(TabBtn, TweenInfo.new(0), {ImageColor3 = Theme.Accent}):Play()
+            TabBtnBg.BackgroundTransparency = 0.78
+            TabBtnBg.BackgroundColor3 = Theme.Accent
         end
 
         return Tab
