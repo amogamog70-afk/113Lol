@@ -1,5 +1,5 @@
 -- ================================================================= --
---               VOLTCLIPS GUI LIBRARY (COMPACT NEVERLOOSE 3D)       --
+--               VOLTCLIPS GUI LIBRARY (AUTHENTIC NEVERLOOSE)        --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -23,7 +23,7 @@ local function RandomString(len)
     return table.concat(result)
 end
 
--- Авто-очистка логов и памяти
+-- Автоматическая очистка логов и сборщик памяти
 task.spawn(function()
     while task.wait(60) do
         pcall(function() LogService:ClearOutput() end)
@@ -68,7 +68,7 @@ local BuiltInIcons = {
     ["Movement"] = "rbxassetid://136160678435000"
 }
 
--- Глубокая цветовая палитра Neverlose
+-- Глубокая цветовая палитра
 local Theme = {
     Background   = Color3.fromRGB(10, 12, 16),
     Sidebar      = Color3.fromRGB(13, 16, 22),
@@ -118,7 +118,7 @@ function VoltClips:CreateWindow(hubTitle)
     OverlayFolder.Name = RandomString(10)
     OverlayFolder.Parent = ScreenGui
 
-    -- Компактное и аккуратное главное окно (650x420px)
+    -- Главное окно
     local Main
     local isCanvasSupported = pcall(function()
         Main = Instance.new("CanvasGroup")
@@ -142,7 +142,7 @@ function VoltClips:CreateWindow(hubTitle)
     MainScale.Scale = 1
     MainScale.Parent = Main
 
-    -- Шапка перетаскивания
+    -- Шапка для перемещения
     local DragHeader = Instance.new("Frame")
     DragHeader.Name = RandomString(10)
     DragHeader.Size = UDim2.new(1, 0, 0, 40)
@@ -167,7 +167,7 @@ function VoltClips:CreateWindow(hubTitle)
         end
     end)
 
-    -- Левый Сайдбар (Компактная ширина 138px)
+    -- Сайдбар
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomString(10)
     Sidebar.Size = UDim2.new(0, 138, 1, 0)
@@ -184,7 +184,7 @@ function VoltClips:CreateWindow(hubTitle)
     SideBorder.BorderSizePixel = 0
     SideBorder.Parent = Sidebar
 
-    -- Шапка Сайдбара
+    -- Шапка Сайдбара (Лого)
     local LogoContainer = Instance.new("Frame")
     LogoContainer.Name = "LogoHeader"
     LogoContainer.Size = UDim2.new(1, 0, 0, 44)
@@ -303,7 +303,7 @@ function VoltClips:CreateWindow(hubTitle)
     SubTabLayout.Padding = UDim.new(0, 6)
     SubTabLayout.Parent = SubTabContainer
 
-    -- Контейнер контента страниц
+    -- Контейнер контента
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = RandomString(10)
     ContentContainer.Size = UDim2.new(1, -148, 1, -44)
@@ -653,7 +653,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (ОБЪЁМНЫЙ СВИТЧ)
+                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (ОБЪЁМНЫЙ СВИТЧ + СТИЛЬНЫЙ POPUP NEVERLOOSE)
                 function Section:AddToggle(text, default, optionsTable, callback)
                     if type(optionsTable) == "function" then
                         callback = optionsTable
@@ -682,7 +682,7 @@ function VoltClips:CreateWindow(hubTitle)
                     Label.TextTruncate = Enum.TextTruncate.AtEnd
                     Label.Parent = TFrame
 
-                    -- Компактный свитч (28x14px)
+                    -- Свитч (28x14px)
                     local SwitchBg = Instance.new("TextButton")
                     SwitchBg.Size = UDim2.new(0, 28, 0, 14)
                     SwitchBg.Position = UDim2.new(1, -30, 0.5, -7)
@@ -754,9 +754,12 @@ function VoltClips:CreateWindow(hubTitle)
                             ClickCatcher.ZIndex = 900
                             ClickCatcher.Parent = ScreenGui
 
+                            -- Элегантное окно под-настроек в стиле Neverlose Popover
                             local Popup = Instance.new("Frame")
                             Popup.Name = RandomString(10)
                             Popup.BackgroundColor3 = Theme.Card
+                            Popup.BorderSizePixel = 0
+                            Popup.ClipsDescendants = false
                             Popup.ZIndex = 901
                             Popup.Parent = OverlayFolder
                             CreateCorner(Popup, 6)
@@ -764,11 +767,12 @@ function VoltClips:CreateWindow(hubTitle)
 
                             local btnAbsPos = DotsBtn.AbsolutePosition
                             local screenSize = workspace.CurrentCamera.ViewportSize
-                            local popupW = 180
-                            local posX = math.clamp(btnAbsPos.X + 22, 10, screenSize.X - popupW - 10)
-                            local posY = math.clamp(btnAbsPos.Y - 6, 10, screenSize.Y - 250)
+                            local popupW = 200
+                            local posX = math.clamp(btnAbsPos.X + 24, 10, screenSize.X - popupW - 10)
+                            local posY = math.clamp(btnAbsPos.Y - 6, 10, screenSize.Y - 260)
                             Popup.Position = UDim2.new(0, posX, 0, posY)
 
+                            -- Шапка Popover
                             local PopHeader = Instance.new("Frame")
                             PopHeader.Size = UDim2.new(1, 0, 0, 26)
                             PopHeader.BackgroundColor3 = Theme.Sidebar
@@ -786,32 +790,40 @@ function VoltClips:CreateWindow(hubTitle)
                             PopHeaderPatch.Parent = PopHeader
 
                             local PopHeaderTitle = Instance.new("TextLabel")
-                            PopHeaderTitle.Size = UDim2.new(1, -30, 1, 0)
-                            PopHeaderTitle.Position = UDim2.new(0, 8, 0, 0)
+                            PopHeaderTitle.Size = UDim2.new(1, -32, 1, 0)
+                            PopHeaderTitle.Position = UDim2.new(0, 10, 0, 0)
                             PopHeaderTitle.BackgroundTransparency = 1
                             PopHeaderTitle.Text = text .. " Options"
                             PopHeaderTitle.TextColor3 = Theme.Text
-                            PopHeaderTitle.Font = Enum.Font.GothamBold
+                            PopHeaderTitle.Font = Enum.Font.GothamBlack
                             PopHeaderTitle.TextSize = 10
                             PopHeaderTitle.TextXAlignment = Enum.TextXAlignment.Left
                             PopHeaderTitle.ZIndex = 903
                             PopHeaderTitle.Parent = PopHeader
 
+                            -- Кнопка закрытия (Четкий символ 'X' без поломанных глифов)
                             local PopClose = Instance.new("TextButton")
                             PopClose.Size = UDim2.new(0, 18, 0, 18)
-                            PopClose.Position = UDim2.new(1, -20, 0.5, -9)
+                            PopClose.Position = UDim2.new(1, -22, 0.5, -9)
                             PopClose.BackgroundTransparency = 1
-                            PopClose.Text = "✕"
+                            PopClose.Text = "X"
                             PopClose.TextColor3 = Theme.SubText
                             PopClose.Font = Enum.Font.GothamBold
-                            PopClose.TextSize = 9
+                            PopClose.TextSize = 10
                             PopClose.ZIndex = 903
                             PopClose.Parent = PopHeader
 
+                            PopClose.MouseEnter:Connect(function()
+                                PopClose.TextColor3 = Theme.Text
+                            end)
+                            PopClose.MouseLeave:Connect(function()
+                                PopClose.TextColor3 = Theme.SubText
+                            end)
                             PopClose.MouseButton1Click:Connect(function()
                                 CloseAllPopups()
                             end)
 
+                            -- Перетаскивание Popover за шапку
                             local pDragStart, pStartPos
                             PopHeader.InputBegan:Connect(function(input)
                                 if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -835,26 +847,24 @@ function VoltClips:CreateWindow(hubTitle)
                                 end
                             end)
 
-                            local PopContainer = Instance.new("ScrollingFrame")
-                            PopContainer.Size = UDim2.new(1, -12, 1, -32)
-                            PopContainer.Position = UDim2.new(0, 6, 0, 28)
+                            -- Контейнер опций с чистыми отступами и БЕЗ мешающего скроллбара
+                            local PopContainer = Instance.new("Frame")
+                            PopContainer.Size = UDim2.new(1, -16, 0, 0)
+                            PopContainer.Position = UDim2.new(0, 8, 0, 30)
                             PopContainer.BackgroundTransparency = 1
-                            PopContainer.BorderSizePixel = 0
-                            PopContainer.ScrollBarThickness = 2
-                            PopContainer.ScrollBarImageColor3 = Theme.Accent
-                            PopContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
                             PopContainer.ZIndex = 902
                             PopContainer.Parent = Popup
 
                             local PopList = Instance.new("UIListLayout")
-                            PopList.Padding = UDim.new(0, 4)
+                            PopList.Padding = UDim.new(0, 6)
                             PopList.Parent = PopContainer
 
                             PopList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-                                local newH = math.clamp(PopList.AbsoluteContentSize.Y + 38, 44, 260)
+                                local newH = PopList.AbsoluteContentSize.Y + 38
                                 Popup.Size = UDim2.new(0, popupW, 0, newH)
+                                PopContainer.Size = UDim2.new(1, -16, 0, PopList.AbsoluteContentSize.Y)
                             end)
-                            Popup.Size = UDim2.new(0, popupW, 0, 44)
+                            Popup.Size = UDim2.new(0, popupW, 0, 48)
 
                             ClickCatcher.MouseButton1Click:Connect(function()
                                 if not popDragging then
@@ -878,7 +888,7 @@ function VoltClips:CreateWindow(hubTitle)
                                     pLabel.BackgroundTransparency = 1
                                     pLabel.Text = opt.Text
                                     pLabel.TextColor3 = pActive and Theme.Text or Theme.SubText
-                                    pLabel.Font = Enum.Font.GothamMedium
+                                    pLabel.Font = Enum.Font.GothamBold
                                     pLabel.TextSize = 10
                                     pLabel.TextXAlignment = Enum.TextXAlignment.Left
                                     pLabel.ZIndex = 904
@@ -886,13 +896,14 @@ function VoltClips:CreateWindow(hubTitle)
 
                                     local pSwitch = Instance.new("TextButton")
                                     pSwitch.Size = UDim2.new(0, 26, 0, 13)
-                                    pSwitch.Position = UDim2.new(1, -28, 0.5, -6)
+                                    pSwitch.Position = UDim2.new(1, -26, 0.5, -6)
                                     pSwitch.BackgroundColor3 = pActive and Theme.Accent or Theme.Element
                                     pSwitch.Text = ""
                                     pSwitch.AutoButtonColor = false
                                     pSwitch.ZIndex = 904
                                     pSwitch.Parent = pFrame
                                     CreateCorner(pSwitch, 6)
+                                    CreateStroke(pSwitch, Theme.CardStroke, 1, 0.5)
 
                                     local pKnob = Instance.new("Frame")
                                     pKnob.Size = UDim2.new(0, 9, 0, 9)
@@ -925,21 +936,21 @@ function VoltClips:CreateWindow(hubTitle)
                                     sFrame.Parent = PopContainer
 
                                     local sLabel = Instance.new("TextLabel")
-                                    sLabel.Size = UDim2.new(1, -42, 0, 14)
+                                    sLabel.Size = UDim2.new(1, -44, 0, 14)
                                     sLabel.Position = UDim2.new(0, 2, 0, 0)
                                     sLabel.BackgroundTransparency = 1
                                     sLabel.Text = opt.Text
                                     sLabel.TextColor3 = Theme.SubText
-                                    sLabel.Font = Enum.Font.GothamMedium
+                                    sLabel.Font = Enum.Font.GothamBold
                                     sLabel.TextSize = 10
                                     sLabel.TextXAlignment = Enum.TextXAlignment.Left
                                     sLabel.ZIndex = 904
                                     sLabel.Parent = sFrame
 
                                     local sValBox = Instance.new("TextBox")
-                                    sValBox.Size = UDim2.new(0, 34, 0, 14)
+                                    sValBox.Size = UDim2.new(0, 36, 0, 14)
                                     sValBox.Position = UDim2.new(1, -36, 0, 0)
-                                    sValBox.BackgroundColor3 = Theme.Element
+                                    sValBox.BackgroundColor3 = Theme.TrackBg
                                     sValBox.Text = tostring(sVal)
                                     sValBox.TextColor3 = Theme.Accent
                                     sValBox.Font = Enum.Font.GothamBold
@@ -949,8 +960,9 @@ function VoltClips:CreateWindow(hubTitle)
                                     sValBox.ZIndex = 904
                                     sValBox.Parent = sFrame
                                     CreateCorner(sValBox, 3)
+                                    CreateStroke(sValBox, Theme.CardStroke, 1, 0.5)
 
-                                    -- Компактный трек слайдера
+                                    -- Трек слайдера с безопасными отступами (никаких выходов за край!)
                                     local sBar = Instance.new("Frame")
                                     sBar.Size = UDim2.new(1, -12, 0, 5)
                                     sBar.Position = UDim2.new(0, 6, 0, 20)
@@ -1008,7 +1020,7 @@ function VoltClips:CreateWindow(hubTitle)
 
                                 elseif opt.Type == "Button" then
                                     local pBtn = Instance.new("TextButton")
-                                    pBtn.Size = UDim2.new(1, 0, 0, 20)
+                                    pBtn.Size = UDim2.new(1, 0, 0, 22)
                                     pBtn.BackgroundColor3 = Theme.Element
                                     pBtn.Text = opt.Text
                                     pBtn.TextColor3 = Theme.Text
@@ -1017,7 +1029,7 @@ function VoltClips:CreateWindow(hubTitle)
                                     pBtn.AutoButtonColor = false
                                     pBtn.ZIndex = 903
                                     pBtn.Parent = PopContainer
-                                    CreateCorner(pBtn, 3)
+                                    CreateCorner(pBtn, 4)
                                     CreateStroke(pBtn, Theme.CardStroke, 1, 0.5)
 
                                     pBtn.MouseEnter:Connect(function()
@@ -1037,7 +1049,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 3. СЛАЙДЕР (ИДЕАЛЬНО ВПИСАННЫЙ БЕЗ ВЫХОДА ЗА ГРАНИЦЫ)
+                -- 3. СЛАЙДЕР
                 function Section:AddSlider(text, min, max, default, unit, callback)
                     if type(unit) == "function" then
                         callback = unit
@@ -1053,7 +1065,6 @@ function VoltClips:CreateWindow(hubTitle)
                     SFrame.BackgroundTransparency = 1
                     SFrame.Parent = Container
 
-                    -- Название
                     local Title = Instance.new("TextLabel")
                     Title.Size = UDim2.new(1, -54, 0, 14)
                     Title.Position = UDim2.new(0, 2, 0, 0)
@@ -1066,7 +1077,6 @@ function VoltClips:CreateWindow(hubTitle)
                     Title.TextTruncate = Enum.TextTruncate.AtEnd
                     Title.Parent = SFrame
 
-                    -- Бейдж значения
                     local ValueBadge = Instance.new("Frame")
                     ValueBadge.Size = UDim2.new(0, 46, 0, 15)
                     ValueBadge.Position = UDim2.new(1, -46, 0, -1)
@@ -1085,7 +1095,6 @@ function VoltClips:CreateWindow(hubTitle)
                     ValueInput.ClearTextOnFocus = false
                     ValueInput.Parent = ValueBadge
 
-                    -- Трек слайдера (с отступами по 6px с краев, чтобы Knob не вылезал!)
                     local Bar = Instance.new("Frame")
                     Bar.Size = UDim2.new(1, -12, 0, 5)
                     Bar.Position = UDim2.new(0, 6, 0, 20)
@@ -1100,7 +1109,6 @@ function VoltClips:CreateWindow(hubTitle)
                     Fill.Parent = Bar
                     CreateCorner(Fill, 2)
 
-                    -- Бегунок
                     local Knob = Instance.new("Frame")
                     Knob.Size = UDim2.new(0, 10, 0, 10)
                     Knob.Position = UDim2.new(1, -5, 0.5, -5)
@@ -1217,20 +1225,20 @@ function VoltClips:CreateWindow(hubTitle)
         CloseAllPopups()
 
         if Main:IsA("CanvasGroup") then
-            TweenService:Create(Main, TweenInfo.new(0.18, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+            TweenService:Create(Main, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
                 GroupTransparency = 1
             }):Play()
         end
 
-        TweenService:Create(MainScale, TweenInfo.new(0.18, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+        TweenService:Create(MainScale, TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
             Scale = 0.95
         }):Play()
 
-        TweenService:Create(mainStroke, TweenInfo.new(0.16, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+        TweenService:Create(mainStroke, TweenInfo.new(0.14, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
             Transparency = 1
         }):Play()
 
-        task.wait(0.18)
+        task.wait(0.15)
         Main.Visible = false
         isOpen = false
         animating = false
@@ -1244,25 +1252,25 @@ function VoltClips:CreateWindow(hubTitle)
         if Main:IsA("CanvasGroup") then
             Main.GroupTransparency = 1
         end
-        MainScale.Scale = 0.95
+        MainScale.Scale = 0.94
         mainStroke.Transparency = 1
 
         if Main:IsA("CanvasGroup") then
-            TweenService:Create(Main, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+            TweenService:Create(Main, TweenInfo.new(0.20, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
                 GroupTransparency = 0
             }):Play()
         end
 
-        TweenService:Create(MainScale, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        TweenService:Create(MainScale, TweenInfo.new(0.20, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
             Scale = 1.0
         }):Play()
 
-        TweenService:Create(mainStroke, TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        TweenService:Create(mainStroke, TweenInfo.new(0.20, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
             Transparency = 0.35,
             Color = Theme.CardStroke
         }):Play()
 
-        task.wait(0.22)
+        task.wait(0.20)
         isOpen = true
         animating = false
     end
