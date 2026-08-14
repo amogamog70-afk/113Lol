@@ -1,5 +1,5 @@
 -- ================================================================= --
---               VOLTCLIPS GUI LIBRARY (NEVERLOOSE AUTHENTIC)        --
+--               VOLTCLIPS GUI LIBRARY (PREMIUM NEVERLOOSE)          --
 -- ================================================================= --
 
 local TweenService = game:GetService("TweenService")
@@ -23,7 +23,7 @@ local function RandomString(len)
     return table.concat(result)
 end
 
--- Авто-очистка памяти и логов
+-- Авто-очистка логов и сборщик мусора
 task.spawn(function()
     while task.wait(60) do
         pcall(function() LogService:ClearOutput() end)
@@ -69,16 +69,17 @@ local BuiltInIcons = {
 }
 
 local Theme = {
-    Background   = Color3.fromRGB(10, 12, 17),
-    Sidebar      = Color3.fromRGB(13, 15, 21),
-    Card         = Color3.fromRGB(16, 19, 27),
-    CardStroke   = Color3.fromRGB(30, 36, 50),
-    Element      = Color3.fromRGB(21, 25, 35),
-    ElementHover = Color3.fromRGB(27, 33, 46),
+    Background   = Color3.fromRGB(9, 11, 15),
+    Sidebar      = Color3.fromRGB(12, 14, 19),
+    Card         = Color3.fromRGB(15, 18, 25),
+    CardStroke   = Color3.fromRGB(28, 34, 48),
+    Element      = Color3.fromRGB(20, 24, 34),
+    ElementHover = Color3.fromRGB(26, 32, 45),
     Accent       = Color3.fromRGB(0, 190, 255),
-    AccentGlow   = Color3.fromRGB(80, 215, 255),
-    Text         = Color3.fromRGB(242, 246, 252),
-    SubText      = Color3.fromRGB(132, 144, 166)
+    AccentGlow   = Color3.fromRGB(70, 215, 255),
+    Text         = Color3.fromRGB(240, 244, 252),
+    SubText      = Color3.fromRGB(125, 138, 160),
+    Divider      = Color3.fromRGB(22, 27, 38)
 }
 
 local function CreateCorner(parent, radius)
@@ -114,7 +115,7 @@ function VoltClips:CreateWindow(hubTitle)
     OverlayFolder.Name = RandomString(10)
     OverlayFolder.Parent = ScreenGui
 
-    -- Создание главного окна через CanvasGroup (для идеально плавного Fade/Scale эффекта Neverlose)
+    -- Главное окно (CanvasGroup для 100% плавной Neverlose анимации)
     local Main
     local isCanvasSupported = pcall(function()
         Main = Instance.new("CanvasGroup")
@@ -124,8 +125,8 @@ function VoltClips:CreateWindow(hubTitle)
     end
 
     Main.Name = RandomString(12)
-    Main.Size = UDim2.new(0, 720, 0, 455)
-    Main.Position = UDim2.new(0.5, -360, 0.5, -227)
+    Main.Size = UDim2.new(0, 720, 0, 460)
+    Main.Position = UDim2.new(0.5, -360, 0.5, -230)
     Main.BackgroundColor3 = Theme.Background
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = true
@@ -138,10 +139,10 @@ function VoltClips:CreateWindow(hubTitle)
     MainScale.Scale = 1
     MainScale.Parent = Main
 
-    -- Перетаскивание за верхнюю область
+    -- Верхняя область перетаскивания
     local DragHeader = Instance.new("Frame")
     DragHeader.Name = RandomString(10)
-    DragHeader.Size = UDim2.new(1, 0, 0, 44)
+    DragHeader.Size = UDim2.new(1, 0, 0, 42)
     DragHeader.BackgroundTransparency = 1
     DragHeader.Parent = Main
 
@@ -163,7 +164,7 @@ function VoltClips:CreateWindow(hubTitle)
         end
     end)
 
-    -- Левый Сайдбар (Ширина 148px)
+    -- Левый Сайдбар (148px)
     local Sidebar = Instance.new("Frame")
     Sidebar.Name = RandomString(10)
     Sidebar.Size = UDim2.new(0, 148, 1, 0)
@@ -172,7 +173,7 @@ function VoltClips:CreateWindow(hubTitle)
     Sidebar.Parent = Main
     CreateCorner(Sidebar, 8)
 
-    -- Шапка Сайдбара
+    -- Шапка Сайдбара (Логотип и Название)
     local LogoContainer = Instance.new("Frame")
     LogoContainer.Name = "LogoHeader"
     LogoContainer.Size = UDim2.new(1, 0, 0, 46)
@@ -527,10 +528,14 @@ function VoltClips:CreateWindow(hubTitle)
 
             local LPadd = Instance.new("UIPadding")
             LPadd.PaddingRight = UDim.new(0, 3)
+            LPadd.PaddingTop = UDim.new(0, 2)
+            LPadd.PaddingBottom = UDim.new(0, 6)
             LPadd.Parent = LeftCol
 
             local RPadd = Instance.new("UIPadding")
             RPadd.PaddingRight = UDim.new(0, 3)
+            RPadd.PaddingTop = UDim.new(0, 2)
+            RPadd.PaddingBottom = UDim.new(0, 6)
             RPadd.Parent = RightCol
 
             SubTab.Button = SubBtn
@@ -581,7 +586,7 @@ function VoltClips:CreateWindow(hubTitle)
                 end
                 CList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateSize)
 
-                -- 1. КНОПКА (АККУРАТНАЯ БЕЗ ЛИШНИХ ОБВОДОК)
+                -- 1. КНОПКА
                 function Section:AddButton(text, callback)
                     local Btn = Instance.new("TextButton")
                     Btn.Name = RandomString(8)
@@ -612,7 +617,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (ЧЕТКИЙ И СТРОГИЙ СВИТЧ + СОХРАНЕНИЕ В ПОД-МЕНЮ)
+                -- 2. ПЕРЕКЛЮЧАТЕЛЬ (СВИТЧ С ПОДДЕРЖКОЙ СОХРАНЕНИЯ СОСТОЯНИЯ)
                 function Section:AddToggle(text, default, optionsTable, callback)
                     if type(optionsTable) == "function" then
                         callback = optionsTable
@@ -624,7 +629,7 @@ function VoltClips:CreateWindow(hubTitle)
                     local TFrame = Instance.new("Frame")
                     TFrame.Name = RandomString(8)
                     TFrame.Size = UDim2.new(1, 0, 0, 22)
-                    TFrame.BackgroundColor3 = Theme.Element
+                    TFrame.BackgroundColor3 = Theme.ElementHover
                     TFrame.BackgroundTransparency = 1
                     TFrame.Parent = Container
                     CreateCorner(TFrame, 4)
@@ -641,7 +646,7 @@ function VoltClips:CreateWindow(hubTitle)
                     Label.TextTruncate = Enum.TextTruncate.AtEnd
                     Label.Parent = TFrame
 
-                    -- Аккуратный переключатель (Switch Pill)
+                    -- Переключатель (Switch Pill)
                     local SwitchBg = Instance.new("TextButton")
                     SwitchBg.Size = UDim2.new(0, 28, 0, 14)
                     SwitchBg.Position = UDim2.new(1, -30, 0.5, -7)
@@ -987,7 +992,7 @@ function VoltClips:CreateWindow(hubTitle)
                     UpdateSize()
                 end
 
-                -- 3. СЛАЙДЕР (МГНОВЕННЫЙ ОТКЛИК И ЧИСТЫЙ ДИЗАЙН)
+                -- 3. СЛАЙДЕР (ЧЕТКИЙ И МГНОВЕННЫЙ)
                 function Section:AddSlider(text, min, max, default, unit, callback)
                     if type(unit) == "function" then
                         callback = unit
